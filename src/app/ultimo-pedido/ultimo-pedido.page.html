@@ -1,0 +1,145 @@
+<ion-header>
+  <ion-toolbar mode="ios" color="primary">
+    <ion-title>Comparação pedido anterior</ion-title>
+
+    <ion-button (click)="closeModal()" mode="ios" slot="end">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+
+  <ion-fab vertical="top" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="bottom">
+      <ion-fab-button color="primary" (click)="abrirComparacaoItens()" data-desc="Comparar Itens">
+        <ion-icon name="git-compare"></ion-icon>
+      </ion-fab-button>
+      
+    </ion-fab-list>
+  </ion-fab>
+
+  <!-- DADOS DO PEDIDO ATUAL -->
+  <ion-card color="light">
+    <ion-card-content class="corAtual">
+      <div>
+        <ion-label class="titulo2">Pedido atual</ion-label>
+      </div>
+        <!-- DADOS DO PEDIDO -->
+        <div>
+          <ion-label class="titulo">Representante: </ion-label>
+          <ion-label>{{ pedido.vendedorCodigo }} - {{ pedido.vendedorNome }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Cliente: </ion-label>
+          <ion-label>{{ pedido.cdcliente}} - {{ pedido.clienteNome }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Nome Fantasia: </ion-label>
+          <ion-label>{{ pedido.clienteFantasia }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Tabela: </ion-label>
+          <ion-label>{{pedido.tipotabelaCodigo}} - {{ pedido.tipotabelaDescricao }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Pedido: </ion-label>
+          <ion-label>{{pedido.cdpedido}} - {{pedido.dtpedido | date: 'dd/MM/yyyy' }} : {{pedido.hrpedido}}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Valor de Tabela: </ion-label>
+          <ion-label>{{pedido.totaltabela | currency:'BRL' }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Valor Mínimo: </ion-label>
+          <ion-label>{{pedido.valorreferenciatotal | currency:'BRL' }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Valor do Desconto ou Acréscimo: </ion-label>
+          <ion-label>{{pedido.totaltabela - pedido.totalvenda | currency:'BRL' }}</ion-label>
+          <ion-label *ngIf="pedido.totaltabela < pedido.totalvenda"> (+)</ion-label>
+          <ion-label *ngIf="pedido.totaltabela > pedido.totalvenda"> (-)</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Valor da Venda: </ion-label>
+          <ion-label>{{pedido.totalvenda | currency:'BRL' }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Valor da Gordura Usada ou Armazenada: </ion-label>
+          <ion-label *ngIf="pedido.gordurausada > 0">{{pedido.gordurausada | currency:'BRL' }} (-) </ion-label>
+          <ion-label *ngIf="pedido.gorduragerada > 0">{{pedido.gorduragerada| currency:'BRL' }} (+) </ion-label>
+        </div>
+
+        <div>
+          <ion-label class="titulo">Peso Liquido / Peso Bruto / Volume / Produtos: </ion-label>
+          <ion-label>{{pedido.pesoliquidototal }} / {{pedido.pesobrutototal }} / {{pedido.totalvolume}} / {{pedido.totalprodutos}}</ion-label>
+        </div>
+        <!-- DADOS DO PEDIDO -->
+    </ion-card-content>
+  </ion-card>
+
+
+   <!-- DADOS DO PEDIDO ANTERIOR -->
+   <ion-card color="light">
+    <ion-card-content class="corAnterior">
+      <div>
+        <ion-label class="titulo2">Pedido anterior</ion-label>
+      </div>
+        <!-- DADOS DO PEDIDO -->
+        <div>
+          <ion-label class="titulo">Representante: </ion-label>
+          <ion-label>{{ pedidoAnterior.vendedorCodigo }} - {{ pedidoAnterior.vendedorNome }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Cliente: </ion-label>
+          <ion-label>{{ pedidoAnterior.cdcliente}} - {{ pedidoAnterior.clienteNome }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Nome Fantasia: </ion-label>
+          <ion-label>{{ pedidoAnterior.clienteFantasia }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Tabela: </ion-label>
+          <ion-label>{{pedidoAnterior.tipotabelaCodigo}} - {{ pedidoAnterior.tipotabelaDescricao }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Pedido: </ion-label>
+          <ion-label>{{pedidoAnterior.cdpedido}} - {{pedidoAnterior.dtpedido | date: 'dd/MM/yyyy' }} : {{pedidoAnterior.hrpedido}}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Valor de Tabela: </ion-label>
+          <ion-label>{{pedidoAnterior.totaltabela | currency:'BRL' }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Valor Mínimo: </ion-label>
+          <ion-label>{{pedidoAnterior.valorreferenciatotal | currency:'BRL' }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Valor do Desconto ou Acréscimo: </ion-label>
+          <ion-label>{{pedidoAnterior.totaltabela - pedidoAnterior.totalvenda | currency:'BRL' }}</ion-label>
+          <ion-label *ngIf="pedidoAnterior.totaltabela < pedidoAnterior.totalvenda"> (+)</ion-label>
+          <ion-label *ngIf="pedidoAnterior.totaltabela > pedidoAnterior.totalvenda"> (-)</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Valor da Venda: </ion-label>
+          <ion-label>{{pedidoAnterior.totalvenda | currency:'BRL' }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Valor da Gordura Usada ou Armazenada: </ion-label>
+          <ion-label *ngIf="pedidoAnterior.gordurausada > 0">{{pedidoAnterior.gordurausada | currency:'BRL' }} (-) </ion-label>
+          <ion-label *ngIf="pedidoAnterior.gorduragerada > 0">{{pedidoAnterior.gorduragerada| currency:'BRL' }} (+) </ion-label>
+        </div>
+
+        <div>
+          <ion-label class="titulo">Peso Liquido / Peso Bruto / Volume / Produtos: </ion-label>
+          <ion-label>{{pedidoAnterior.pesoliquidototal }} / {{pedidoAnterior.pesobrutototal }} / {{pedidoAnterior.totalvolume}} / {{pedidoAnterior.totalprodutos}}</ion-label>
+        </div>
+        <!-- DADOS DO PEDIDO -->
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

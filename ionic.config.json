@@ -1,5 +1,7 @@
 {
   "name": "WebAppLiane",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

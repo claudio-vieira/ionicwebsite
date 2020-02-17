@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-
-import { Platform } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { Platform, NavController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -12,19 +13,21 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 export class AppComponent {
   public appPages = [
     {
-      title: 'Home',
-      url: '/home',
-      icon: 'home'
-    },
+      path: '',
+      redirectTo: 'login',
+      pathMatch: 'full'
+      },
     {
-      title: 'List',
-      url: '/list',
-      icon: 'list'
+      title: 'Pedidos',
+      url: '/pedidos',
+      icon: 'home'
     }
   ];
 
   constructor(
     private platform: Platform,
+    private router: Router,
+    private navCtrl: NavController,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar
   ) {
@@ -33,8 +36,14 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
+      this.router.navigateByUrl('login');
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
+  }
+
+  sair() {
+
+    this.navCtrl.navigateRoot('login');
   }
 }

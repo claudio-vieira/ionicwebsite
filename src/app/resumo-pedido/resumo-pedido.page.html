@@ -1,0 +1,116 @@
+<ion-header>
+  <ion-toolbar mode="ios" color="primary">
+    <ion-title>Resumo do pedido</ion-title>
+
+    <ion-button (click)="closeModal()" mode="ios" slot="end">
+      <ion-icon name="close" slot="icon-only"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card color="light">
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-item color="light" lines="none" class="titulo">
+             Produtos
+           </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item color="light" lines="none" class="titulo">
+            Itens
+          </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item color="light" lines="none" class="titulo">
+            Volumes
+          </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item color="light" lines="none" class="titulo">
+            Valor
+          </ion-item>
+          </ion-col>
+        </ion-row>
+
+        <ion-row *ngFor="let produto of resumo" color="light">
+
+          <ion-col>
+            <ion-item color="light">
+              {{produto.tipo}}
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item color="light">
+              {{produto.qtde}}
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item color="light">
+              {{produto.volume}}
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item color="light">
+              {{produto.valor | currency:'BRL' }}
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+
+  <ion-card color="light">
+    <ion-card-content>
+  <ion-grid>
+    <ion-row class="titulo">
+      Pagamento
+    </ion-row>
+    <ion-row>
+      {{pedido.tipoPagamento}}
+    </ion-row>
+    <ion-row>
+      <ion-col class="titulo">
+        Parcela 1
+      </ion-col>
+      <ion-col class="titulo">
+        Parcela 2
+      </ion-col>
+      <ion-col class="titulo">
+        Parcela 3
+      </ion-col>
+      <ion-col class="titulo">
+        Parcela 4
+      </ion-col>
+      <ion-col class="titulo">
+        Parcela 5
+      </ion-col>
+    </ion-row>
+
+
+    <ion-row>
+      <ion-col>
+        {{pedido.parcela1}}
+      </ion-col>
+      <ion-col>
+        {{pedido.parcela2}}
+      </ion-col>
+      <ion-col>
+        {{pedido.parcela3}}
+      </ion-col>
+      <ion-col>
+        {{pedido.parcela4}}
+      </ion-col>
+      <ion-col>
+        {{pedido.parcela5}}
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+</ion-card-content>
+</ion-card>
+</ion-content>

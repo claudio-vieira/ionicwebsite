@@ -1,7 +1,7 @@
 {
   "name": "WebAppLiane",
   "version": "0.0.1",
-  "author": "Ionic Framework",
+  "author": "Integra Tecnologia",
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
@@ -13,9 +13,12 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "^8.2.14",
+    "@angular/cdk": "^8.2.3",
     "@angular/common": "~8.1.2",
     "@angular/core": "~8.1.2",
     "@angular/forms": "~8.1.2",
+    "@angular/material": "^8.2.3",
     "@angular/platform-browser": "~8.1.2",
     "@angular/platform-browser-dynamic": "~8.1.2",
     "@angular/router": "~8.1.2",

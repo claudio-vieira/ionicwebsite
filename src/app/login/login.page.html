@@ -1,0 +1,29 @@
+<ion-content class="ion-padding">
+  <form #form="ngForm" (ngSubmit)="getLogin()">
+    <ion-grid>
+      <ion-row class="ion-justify-content-center">
+        <ion-col class="ion-align-self-center" size-md="6" size-lg="5" size-xs="12">
+          <!-- <div align="center"> 
+            <ion-img src="assets/coachcontrolsvg.svg" style="text-align: center">
+              </ion-img>
+              </div> -->
+         
+            <ion-list>
+              <ion-item color="light" mode="ios">
+                <ion-label position="floating">Codigo Supervisor</ion-label>
+                <ion-input name="codigo" type="number" mode="ios" placeholder="" [(ngModel)]="edtCodigo" required></ion-input>
+              </ion-item>
+              <ion-item color="light" mode="ios">
+                <ion-label position="floating">Senha</ion-label>
+                <ion-input name="password" type="password" mode="ios" placeholder="" [(ngModel)]="edtSenha" required></ion-input>
+              </ion-item>
+              <br>
+              <ion-button mode="ios" color="primary" type="submit">Entrar</ion-button>
+            </ion-list>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+
+  </form>
+</ion-content>

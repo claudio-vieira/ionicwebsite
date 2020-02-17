@@ -2,11 +2,11 @@
   <ion-split-pane contentId="main-content">
     <ion-menu contentId="main-content" type="overlay">
       <ion-header>
-        <ion-toolbar>
+        <ion-toolbar color="primary">
           <ion-title>Menu</ion-title>
         </ion-toolbar>
       </ion-header>
-      <ion-content>
+      <ion-content class="bg-menu">
         <ion-list>
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
             <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
@@ -16,6 +16,16 @@
               </ion-label>
             </ion-item>
           </ion-menu-toggle>
+          <ion-item>
+          </ion-item>
+          <ion-menu-toggle auto-hide="false" >
+              <ion-item (click)="sair()" color="light">
+                <ion-icon slot="start" [name]="'exit'"></ion-icon>
+               <ion-label>
+                Sair
+               </ion-label>
+              </ion-item>
+            </ion-menu-toggle>
         </ion-list>
       </ion-content>
     </ion-menu>

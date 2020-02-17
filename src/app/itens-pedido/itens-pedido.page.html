@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar mode="ios" color="primary">
+    <ion-title>Itens do pedido</ion-title>
+
+    <ion-button (click)="closeModal()" mode="ios" slot="end">
+      <ion-icon name="close" slot="icon-only"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <!-- DADOS DOS ITENS DO PEDIDO -->
+  <ion-list>
+    <ion-card *ngFor="let itens of pedido.itensDoPedido" color="light">
+      <ion-card-content class={{itens.class}} > 
+        <ion-label class="tituloItem">Produto: </ion-label>
+        <ion-label>{{ itens.cdproduto }} - {{ itens.descricaoproduto }}</ion-label>
+        <div>
+          <ion-label class="tituloItem">Qtde: </ion-label>
+          <ion-label>{{itens.qtdeproduto }} {{itens.produtoUnidade}}</ion-label>
+        </div>
+        <div>
+          <ion-label class="tituloItem">Valor de tabela: </ion-label>
+          <ion-label>{{itens.precotabela | currency:'BRL' }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="tituloItem">Valor mínimo: </ion-label>
+          <ion-label>{{itens.valorSelecionadoPedido | currency:'BRL' }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="tituloItem">Valor do Desconto ou Acréscimo: </ion-label>
+          <ion-label>{{itens.precotabela - itens.precovenda | currency:'BRL' }}</ion-label>
+          <ion-label *ngIf="itens.precotabela < itens.precovenda"> (+)</ion-label>
+          <ion-label *ngIf="itens.precotabela > itens.precovenda"> (-)</ion-label>
+        </div>
+        <div>
+          <ion-label class="tituloItem">Valor da venda: </ion-label>
+          <ion-label>{{itens.precovenda | currency:'BRL' }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="tituloItem">Valor da Gordura Usada ou Armazenada: </ion-label>
+          <ion-label *ngIf="itens.usogordura > 0">{{itens.usogordura | currency:'BRL' }} (-) </ion-label>
+          <ion-label *ngIf="itens.sobragordura > 0">{{itens.sobragordura| currency:'BRL' }} (+) </ion-label>
+        </div>
+      </ion-card-content>
+    </ion-card>
+    <!-- DADOS DOS ITENS DO PEDIDO -->
+
+  </ion-list>
+
+
+
+
+
+</ion-content>

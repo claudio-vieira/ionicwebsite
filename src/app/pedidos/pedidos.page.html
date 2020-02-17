@@ -1,0 +1,134 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Pedidos
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-searchbar mode="ios" [(ngModel)]="filtro" (ionChange)="filtrarPedidos()" color="light" placeholder="Filtrar"
+    class="filtro">
+  </ion-searchbar>
+
+  <ion-list>
+
+    <ion-card mode="ios" *ngFor="let pedido of pedidosFiltrados" color="light">
+
+      <ion-fab vertical="top" horizontal="end" slot="fixed">
+        <ion-fab-button>
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-list side="bottom">
+          <ion-fab-button color="primary" (click)="abrirResumo(pedido)" data-desc="Resumo">
+            <ion-icon name="paper"></ion-icon>
+          </ion-fab-button>
+
+          <ion-fab-button color="primary" (click)="abrirItensPedido(pedido)" data-desc="Itens">
+            <ion-icon name="list"></ion-icon>
+          </ion-fab-button>
+
+          <ion-fab-button color="primary" (click)="abrirUltimoPedido(pedido)" data-desc="Comparar com anterior">
+            <ion-icon name="git-compare"></ion-icon>
+          </ion-fab-button>
+          
+        </ion-fab-list>
+      </ion-fab>
+
+      <ion-card-content>
+        <!-- DADOS DO REPRESENTANTE -->
+        <div>
+          <ion-label class="titulo">Representante: </ion-label>
+          <ion-label>{{ pedido.vendedorCodigo }} - {{ pedido.vendedorNome }}</ion-label>
+        </div>
+        <!-- DADOS DO REPRESENTANTE -->
+
+        <!-- DADOS DO CLIENTE -->
+        <div>
+          <ion-label class="titulo">Cliente: </ion-label>
+          <ion-label>{{ pedido.cdcliente}} - {{ pedido.clienteFantasia }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">CNPJ: </ion-label>
+          <ion-label>{{ pedido.clienteCnpj}}</ion-label>
+          &nbsp;
+          <ion-label class="titulo">IE: </ion-label>
+          <ion-label>{{ pedido.clienteInscrestadual}}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Cidade: </ion-label>
+          <ion-label>{{ pedido.clienteCidade}}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Telefone: </ion-label>
+          <ion-label>{{ pedido.clienteFone}}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Tipo tabela: </ion-label>
+          <ion-label>{{pedido.tipotabelaCodigo}} - {{ pedido.tipotabelaDescricao }}</ion-label>
+        </div>
+        <!-- DADOS DO CLIENTE -->
+
+        <!-- DADOS DO PEDIDO -->
+        <div>
+          <ion-label class="titulo">N pedido: </ion-label>
+          <ion-label>{{pedido.cdpedido}} </ion-label>
+          &nbsp;
+          <ion-label class="titulo">Data: </ion-label>
+          <ion-label>{{pedido.dtpedido | date: 'dd/MM/yyyy' }} {{pedido.hrpedido}}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Total tabela: </ion-label>
+          <ion-label>{{pedido.totaltabela | currency:'BRL' }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Total venda: </ion-label>
+          <ion-label>{{pedido.totalvenda | currency:'BRL' }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">ST: </ion-label>
+          <ion-label>{{pedido.st | currency:'BRL' }}</ion-label>
+        </div>        
+        <div>
+          <ion-label class="titulo">Gord. usada: </ion-label>
+          <ion-label>{{pedido.gordurausada | currency:'BRL' }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Gord. armazenada: </ion-label>
+          <ion-label>{{pedido.gorduragerada| currency:'BRL' }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">Total desconto: </ion-label>
+          <ion-label>{{pedido.totaldesconto | currency:'BRL' }}</ion-label>
+        </div>
+        <div *ngIf="pedido.pesobrutototal">
+          <ion-label class="titulo">Peso bruto: </ion-label>
+          <ion-label>{{pedido.pesobrutototal }}</ion-label>
+        </div>
+        <div *ngIf="pedido.pesoliquidototal">
+          <ion-label class="titulo">Peso liquido: </ion-label>
+          <ion-label>{{pedido.pesoliquidototal }}</ion-label>
+        </div>
+        <!-- DADOS DO PEDIDO -->
+
+
+        <div class="ion-float-end ion-padding">
+          <ion-button mode="ios" color="danger" (click)="confirmarRejeitarPedido(pedido)">
+            <ion-icon mode="ios" name="close"></ion-icon>
+            <ion-label class="ion-padding">Rejeitar</ion-label>
+          </ion-button>
+
+          <ion-button mode="ios" color="success" (click)="confirmarLiberarPedido(pedido)">
+            <ion-icon mode="ios" name="checkmark-circle"></ion-icon>
+            <ion-label class="ion-padding">Aprovar</ion-label>
+          </ion-button>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>
