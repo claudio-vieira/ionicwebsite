@@ -43,6 +43,10 @@
           <ion-label *ngIf="itens.usogordura > 0">{{itens.usogordura | currency:'BRL' }} (-) </ion-label>
           <ion-label *ngIf="itens.sobragordura > 0">{{itens.sobragordura| currency:'BRL' }} (+) </ion-label>
         </div>
+        <div>
+          <ion-label class="tituloItemVerm">Gordura do supervisor: </ion-label>
+          <ion-label class="ItemVerm">{{itens.valornegativogordura | currency:'BRL' }}</ion-label>
+        </div>        
       </ion-card-content>
     </ion-card>
     <!-- DADOS DOS ITENS DO PEDIDO -->

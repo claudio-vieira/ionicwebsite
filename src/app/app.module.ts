@@ -15,6 +15,8 @@ import ptBr from '@angular/common/locales/pt';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 
 registerLocaleData(ptBr);
@@ -32,7 +34,8 @@ registerLocaleData(ptBr);
       animated: true
       // mode: 'ios',
     }),
-    AppRoutingModule
+    AppRoutingModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     StatusBar,

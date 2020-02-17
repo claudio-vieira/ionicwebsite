@@ -36,14 +36,20 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.router.navigateByUrl('login');
+      const cdSupervisorLogado = window.localStorage.getItem('cdSupervisor');
+      if (cdSupervisorLogado) {
+        this.router.navigateByUrl('pedidos');
+      } else {
+        this.router.navigateByUrl('login');
+      }
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
   }
 
   sair() {
-
+    window.localStorage.setItem('cdSupervisor', '');
+    window.localStorage.setItem('nomeSupervisor', '');
     this.navCtrl.navigateRoot('login');
   }
 }

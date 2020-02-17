@@ -292,7 +292,7 @@ export class PedidosPage implements OnInit {
 
     const cdSupervisor = window.localStorage.getItem('cdSupervisor');
 
-    this.api.getUltimoPedido(pedido.cdpedido, cdSupervisor, pedido.cdcliente).subscribe(res => {
+    this.api.getUltimoPedido(pedido.vendedorCodigo, cdSupervisor, pedido.cdcliente).subscribe(res => {
 
       if (!res) {
         loading.dismiss();

@@ -73,7 +73,10 @@
           <ion-label *ngIf="pedido.gordurausada > 0">{{pedido.gordurausada | currency:'BRL' }} (-) </ion-label>
           <ion-label *ngIf="pedido.gorduragerada > 0">{{pedido.gorduragerada| currency:'BRL' }} (+) </ion-label>
         </div>
-
+        <div>
+          <ion-label class="tituloVerm">Gordura do supervisor: </ion-label>
+          <ion-label class="Verm">{{pedido.valalorPendenteGordura| currency:'BRL' }}</ion-label>
+        </div>    
         <div>
           <ion-label class="titulo">Peso Liquido / Peso Bruto / Volume / Produtos: </ion-label>
           <ion-label>{{pedido.pesoliquidototal }} / {{pedido.pesobrutototal }} / {{pedido.totalvolume}} / {{pedido.totalprodutos}}</ion-label>
@@ -133,7 +136,10 @@
           <ion-label *ngIf="pedidoAnterior.gordurausada > 0">{{pedidoAnterior.gordurausada | currency:'BRL' }} (-) </ion-label>
           <ion-label *ngIf="pedidoAnterior.gorduragerada > 0">{{pedidoAnterior.gorduragerada| currency:'BRL' }} (+) </ion-label>
         </div>
-
+        <div>
+          <ion-label class="tituloVerm">Gordura do supervisor: </ion-label>
+          <ion-label class="Verm">{{pedidoAnterior.valalorPendenteGordura| currency:'BRL' }}</ion-label>
+        </div>    
         <div>
           <ion-label class="titulo">Peso Liquido / Peso Bruto / Volume / Produtos: </ion-label>
           <ion-label>{{pedidoAnterior.pesoliquidototal }} / {{pedidoAnterior.pesobrutototal }} / {{pedidoAnterior.totalvolume}} / {{pedidoAnterior.totalprodutos}}</ion-label>
