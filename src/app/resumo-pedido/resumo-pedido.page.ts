@@ -64,6 +64,7 @@ export class ResumoPedidoPage implements OnInit {
     objProduto.peso = (objProduto.peso == null ? 0 : objProduto.peso) + (item.qtdeproduto * (+item.produtoPesobruto));
     objProduto.valor = (objProduto.valor == null ? 0 : objProduto.valor) + (item.qtdeproduto * (+item.precovenda));
 
+    objProduto.peso = +objProduto.peso.toFixed(2);
     if (!this.testarProdutoJaEstaNoArray(objProduto)) {
       this.resumo.push(objProduto);
     }

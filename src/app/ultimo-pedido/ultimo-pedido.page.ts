@@ -103,6 +103,8 @@ export class UltimoPedidoPage implements OnInit {
   }
 
   popularArrayFinal() {
+    this.pedidoAjustado = null;
+    this.itens = [];
     this.pedidoAjustado = Object.assign({}, this.pedido);
     let itensAnterior = this.pedidoAnterior.itensDoPedido;
 
