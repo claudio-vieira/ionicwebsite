@@ -29,6 +29,10 @@ const routes: Routes = [
   {
     path: 'ultimo-pedido',
     loadChildren: './ultimo-pedido/ultimo-pedido.module#UltimoPedidoPageModule'
+  },
+  {
+    path: 'historico-pedido',
+    loadChildren: './historico-pedido/historico-pedido.module#HistoricoPedidoPageModule'
   }
 ];
 

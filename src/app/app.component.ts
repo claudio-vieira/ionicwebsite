@@ -16,11 +16,16 @@ export class AppComponent {
       path: '',
       redirectTo: 'login',
       pathMatch: 'full'
-      },
+    },
     {
       title: 'Pedidos',
       url: '/pedidos',
       icon: 'home'
+    },
+    {
+      title: 'Histórico de pedidos',
+      url: '/historico-pedido',
+      icon: 'filing'
     }
   ];
 

@@ -4,41 +4,44 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Pedidos
+      Histórico de Pedidos
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
-  <ion-searchbar mode="ios" [(ngModel)]="filtro" (ionChange)="filtrarPedidos()" color="light" placeholder="Filtrar"
+  <ion-searchbar mode="ios" [(ngModel)]="representante" (ionChange)="filtrarPedidos()" color="light" placeholder="Representante"
     class="filtro">
   </ion-searchbar>
 
+  <ion-searchbar mode="ios" [(ngModel)]="filtro" (ionChange)="filtrarPedidos()" color="light" placeholder="Filtrar"
+  class="filtro">
+</ion-searchbar>
+
   <ion-list>
 
-    <ion-card mode="ios" *ngFor="let pedido of pedidosFiltrados" color="light">
-
-      <ion-fab vertical="top" horizontal="end" slot="fixed">
-        <ion-fab-button>
-          <ion-icon name="add"></ion-icon>
+    <ion-fab vertical="top" horizontal="end" slot="fixed">
+      <ion-fab-button>
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="bottom">
+        <ion-fab-button color="primary" (click)="abrirResumo(pedido)" data-desc="Resumo">
+          <ion-icon name="paper"></ion-icon>
         </ion-fab-button>
-        <ion-fab-list side="bottom">
-          <ion-fab-button color="primary" (click)="abrirResumo(pedido)" data-desc="Resumo">
-            <ion-icon name="paper"></ion-icon>
-          </ion-fab-button>
 
-          <ion-fab-button color="primary" (click)="abrirItensPedido(pedido)" data-desc="Itens">
-            <ion-icon name="list"></ion-icon>
-          </ion-fab-button>
+        <ion-fab-button color="primary" (click)="abrirItensPedido(pedido)" data-desc="Itens">
+          <ion-icon name="list"></ion-icon>
+        </ion-fab-button>
 
-          <ion-fab-button color="primary" (click)="abrirUltimoPedido(pedido)" data-desc="Comparar com anterior">
-            <ion-icon name="git-compare"></ion-icon>
-          </ion-fab-button>
-          
-        </ion-fab-list>
-      </ion-fab>
+        <ion-fab-button color="primary" (click)="abrirUltimoPedido(pedido)" data-desc="Comparar com anterior">
+          <ion-icon name="git-compare"></ion-icon>
+        </ion-fab-button>
+        
+      </ion-fab-list>
+    </ion-fab>
 
+    <ion-card mode="ios" *ngFor="let pedido of pedidosFiltrados" color="light">
       <ion-card-content>
         <!-- DADOS DO REPRESENTANTE -->
         <div>
@@ -118,37 +121,13 @@
           <ion-label class="tituloVerm">R$ Gordura S:</ion-label>
           <ion-label class="Verm">{{pedido.valalorPendenteGordura| currency:'&nbsp;' }}</ion-label>
         </div>      
-        <!-- <div>
-          <ion-label class="titulo">Total desconto: </ion-label>
-          <ion-label>{{pedido.totaldesconto | currency:'&nbsp;' }}</ion-label>
-        </div> -->
+
 
         <div>
           <ion-label class="titulo">Peso Liquido | Peso Bruto | Volume | Produtos: </ion-label>
           <ion-label>{{pedido.pesoliquidototal }} | {{pedido.pesobrutototal }} | {{pedido.totalvolume}} | {{pedido.totalprodutos}}</ion-label>
         </div>
-        <!-- <div *ngIf="pedido.pesobrutototal">
-          <ion-label class="titulo">Peso bruto: </ion-label>
-          <ion-label>{{pedido.pesobrutototal }}</ion-label>
-        </div>
-        <div *ngIf="pedido.pesoliquidototal">
-          <ion-label class="titulo">Peso liquido: </ion-label>
-          <ion-label>{{pedido.pesoliquidototal }}</ion-label>
-        </div> -->
-        <!-- DADOS DO PEDIDO -->
 
-
-        <div class="ion-float-end ion-padding">
-          <ion-button mode="ios" color="danger" (click)="confirmarRejeitarPedido(pedido)">
-            <ion-icon mode="ios" name="close"></ion-icon>
-            <ion-label class="ion-padding">Rejeitar</ion-label>
-          </ion-button>
-
-          <ion-button mode="ios" color="success" (click)="confirmarLiberarPedido(pedido)">
-            <ion-icon mode="ios" name="checkmark-circle"></ion-icon>
-            <ion-label class="ion-padding">Aprovar</ion-label>
-          </ion-button>
-        </div>
 
       </ion-card-content>
     </ion-card>
