@@ -1,0 +1,226 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Histórico de Pedidos Filtros
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-searchbar mode="ios" [(ngModel)]="representanteSelected" (ionChange)="setarRepresentante(representanteSelected)" color="light" placeholder="Representante"
+    class="filtro">
+  </ion-searchbar>
+
+  <ion-searchbar mode="ios" [(ngModel)]="clienteSelected" (ionChange)="setarCliente(clienteSelected)" color="light" placeholder="Cliente"
+    class="filtro"> 
+  </ion-searchbar>
+
+<ion-item class="datetimePeriodoLeft">
+  <ion-label position="floating">Inicio</ion-label>
+  <ion-datetime displayFormat="DD/MM/YYYY" min="1970-01-01" max="2050-12-31" value="2020-04-27T15:03:46.789" [(ngModel)]="dataInicioSelected" (ionChange)="setarDataInicio(dataInicioSelected)"></ion-datetime>
+</ion-item>
+
+<ion-item class="datetimePeriodoRight">
+  <ion-label position="floating">Término</ion-label>
+  <ion-datetime displayFormat="DD/MM/YYYY" min="1970-01-01" max="2050-12-31" value="2020-04-27T15:03:46.789" [(ngModel)]="dataFimSelected" (ionChange)="setarDataFim(dataFimSelected)"></ion-datetime>
+</ion-item>
+<div class="searchFilter">
+  <ion-item class="filterFloatLeft">
+    <ion-label>Estado</ion-label>
+    <ion-select mode="ios" [(ngModel)]="estadoSelected" (ionChange)="setarEstado(estadoSelected)">
+      <ion-select-option *ngFor="let estado of estados" value="{{estado.id}}">{{estado.sigla}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item class="filterFloatLeft">
+    <ion-label>Cidade</ion-label>
+    <ion-select mode="ios" [(ngModel)]="cidadeSelected" (ionChange)="setarCidade(cidadeSelected)">
+      <ion-select-option *ngFor="let cidade of cidades" value="{{cidade.id}}">{{cidade.nome}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item class="filterFloatLeft">
+    <ion-label>Situação</ion-label>
+    <ion-select mode="ios" [(ngModel)]="situacaoSelected" (ionChange)="setarSituacao(situacaoSelected)">
+      <ion-select-option *ngFor="let situacao of situacoes" value="{{situacao}}">{{situacao}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+</div>
+<div>
+  <!-- Disabled Checkbox -->
+  <ion-item>
+    <ion-label>Sintético</ion-label>
+    <ion-checkbox slot="end" [(ngModel)]="isSintetico" (click)="switchSintetico(isSintetico)"></ion-checkbox>
+  </ion-item>
+  <ion-button (click)="getPedidos()" style="margin: 15px;">Pesquisar</ion-button>
+</div>
+
+<div *ngIf="!getIsSintetico()">
+  <ion-list mode="ios" *ngFor="let pedido of pedidosFiltrados" color="light">
+
+    <ion-fab vertical="top" horizontal="end" slot="fixed">
+      <ion-fab-button>
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="bottom">
+        <ion-fab-button color="primary" (click)="abrirResumo(pedido)" data-desc="Resumo">
+          <ion-icon name="paper"></ion-icon>
+        </ion-fab-button>
+
+        <ion-fab-button color="primary" (click)="abrirItensPedido(pedido)" data-desc="Itens">
+          <ion-icon name="list"></ion-icon>
+        </ion-fab-button>
+
+        <ion-fab-button color="primary" (click)="abrirUltimoPedido(pedido)" data-desc="Comparar com anterior">
+          <ion-icon name="git-compare"></ion-icon>
+        </ion-fab-button>
+        
+      </ion-fab-list>
+    </ion-fab>
+
+    <ion-card>
+      <ion-card-content>
+        <!-- DADOS DO REPRESENTANTE -->
+        <div>
+          <!-- <ion-label class="titulo">Representante: </ion-label> -->
+          <ion-label>{{ pedido.vendedorCodigo }} - {{ pedido.vendedorNome }}</ion-label>
+        </div>
+        <!-- DADOS DO REPRESENTANTE -->
+
+        <!-- DADOS DO CLIENTE -->
+        <div>
+          <!-- <ion-label class="titulo">Cliente: </ion-label> -->
+          <ion-label>{{ pedido.cdcliente}} - {{ pedido.clienteNome }}</ion-label>
+        </div>
+        <div>
+          <!-- <ion-label class="titulo">Nome Fantasia: </ion-label> -->
+          <ion-label>{{ pedido.clienteFantasia }}</ion-label>
+        </div>
+        <div>
+          <!-- <ion-label class="titulo">CNPJ: </ion-label> -->
+          <ion-label>{{ pedido.clienteCnpj}} | {{ pedido.clienteInscrestadual}}</ion-label>
+          &nbsp;
+          <!-- <ion-label class="titulo">IE: </ion-label> -->
+          <!-- <ion-label>{{ pedido.clienteInscrestadual}}</ion-label> -->
+        </div>
+        <div>
+          <!-- <ion-label class="titulo">Cidade: </ion-label> -->
+          <ion-label>{{ pedido.clienteCidade}}</ion-label>
+        </div>
+        <div>
+          <!-- <ion-label class="titulo">Telefone: </ion-label> -->
+          <ion-label>{{ pedido.clienteFone}}</ion-label>
+        </div>
+        <div>
+          <!-- <ion-label class="titulo">Tipo tabela: </ion-label> -->
+          <ion-label>{{pedido.tipotabelaCodigo}} - {{ pedido.tipotabelaDescricao }}</ion-label>
+        </div>
+        <!-- DADOS DO CLIENTE -->
+
+        <!-- DADOS DO PEDIDO -->
+        <div>
+          <ion-label class="titulo">N pedido: </ion-label>
+          <ion-label>{{pedido.cdpedido}} </ion-label>
+          &nbsp;
+          <ion-label class="titulo">Data: </ion-label>
+          <ion-label>{{pedido.dtpedido | date: 'dd/MM/yyyy' }} {{pedido.hrpedido}}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">R$ Tabela: </ion-label>
+          <ion-label>{{pedido.totaltabela | currency:'&nbsp;' }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">R$ Mínimo: </ion-label>
+          <ion-label>{{pedido.valorreferenciatotal |currency:'&nbsp;' }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">R$ Desc/Acres:</ion-label>
+          <ion-label>{{pedido.totalvenda }} -  {{ pedido.totaltabela }}</ion-label>
+          <ion-label *ngIf="pedido.totaltabela < pedido.totalvenda"> essa{{pedido.totalvenda - pedido.totaltabela | currency:'&nbsp;' }} (+)</ion-label>
+          <ion-label *ngIf="pedido.totaltabela > pedido.totalvenda"> {{pedido.totaltabela - pedido.totalvenda | currency:'&nbsp;' }} (-)</ion-label>
+          <ion-label *ngIf="pedido.totaltabela == pedido.totalvenda">&nbsp; 0,00</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">R$ Venda: </ion-label>
+          <ion-label>{{pedido.totalvenda | currency:'&nbsp;' }}</ion-label>
+        </div>
+        <div>
+          <ion-label class="titulo">R$ ST: </ion-label>
+          <ion-label>{{pedido.st | currency:'&nbsp;' }}</ion-label>
+        </div>        
+        <div>
+          <ion-label class="titulo">R$ Gordura R:</ion-label>
+          <ion-label *ngIf="pedido.gordurausada > 0">{{pedido.gordurausada | currency:'&nbsp;' }} (-) </ion-label>
+          <ion-label *ngIf="pedido.gorduragerada > 0">{{pedido.gorduragerada | currency:'&nbsp;' }} (+) </ion-label>
+          <ion-label *ngIf="pedido.gordurausada == 0 && pedido.gorduragerada == 0"> &nbsp;0,00</ion-label>
+        </div>
+        <div>
+          <ion-label class="tituloVerm">R$ Gordura S:</ion-label>
+          <ion-label class="Verm">{{pedido.valalorPendenteGordura| currency:'&nbsp;' }}</ion-label>
+        </div>      
+
+
+        <div>
+          <ion-label class="titulo">Peso Liquido | Peso Bruto | Volume | Produtos: </ion-label>
+          <ion-label>{{pedido.pesoliquidototal }} | {{pedido.pesobrutototal }} | {{pedido.totalvolume}} | {{pedido.totalprodutos}}</ion-label>
+        </div>
+
+
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</div>
+
+  <ion-grid *ngIf="getIsSintetico()">
+    <ion-row>
+      <ion-col>Espécie</ion-col>
+      <ion-col>Quantidade</ion-col>
+      <ion-col>Volume</ion-col>
+      <ion-col>Peso Líquido</ion-col>
+      <ion-col>Peso Bruto</ion-col>
+      <ion-col>Valor</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>Macarrão</ion-col>
+      <ion-col>{{quantidadesM}}</ion-col>
+      <ion-col>{{volumesM}}</ion-col>
+      <ion-col>{{pesosLiquidoM.toFixed(2)}}</ion-col>
+      <ion-col>{{pesosBrutoM.toFixed(2)}}</ion-col>
+      <ion-col>{{valoresM.toFixed(2)}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>Biscoito</ion-col>
+      <ion-col>{{quantidadesB}}</ion-col>
+      <ion-col>{{volumesB}}</ion-col>
+      <ion-col>{{pesosLiquidoB.toFixed(2)}}</ion-col>
+      <ion-col>{{pesosBrutoB.toFixed(2)}}</ion-col>
+      <ion-col>{{valoresB.toFixed(2)}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>Farinhas</ion-col>
+      <ion-col>{{quantidadesF}}</ion-col>
+      <ion-col>{{volumesF}}</ion-col>
+      <ion-col>{{pesosLiquidoF.toFixed(2)}}</ion-col>
+      <ion-col>{{pesosBrutoF.toFixed(2)}}</ion-col>
+      <ion-col>{{valoresF.toFixed(2)}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>Revenda</ion-col>
+      <ion-col>{{quantidadesR}}</ion-col>
+      <ion-col>{{volumesR}}</ion-col>
+      <ion-col>{{pesosLiquidoR.toFixed(2)}}</ion-col>
+      <ion-col>{{pesosBrutoR.toFixed(2)}}</ion-col>
+      <ion-col>{{valoresR.toFixed(2)}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>Total</ion-col>
+      <ion-col>{{quantidadesM + quantidadesB + quantidadesF + quantidadesR}}</ion-col>
+      <ion-col>{{volumesM + volumesB + volumesF + volumesR}}</ion-col>
+      <ion-col>{{(pesosLiquidoM + pesosLiquidoB + pesosLiquidoF + pesosLiquidoR).toFixed(2)}}</ion-col>
+      <ion-col>{{(pesosBrutoM + pesosBrutoB + pesosBrutoF + pesosBrutoR).toFixed(2)}}</ion-col>
+      <ion-col>{{(valoresM + valoresB + valoresF + valoresR).toFixed(2)}}</ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

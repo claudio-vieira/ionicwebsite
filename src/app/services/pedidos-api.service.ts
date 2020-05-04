@@ -47,10 +47,53 @@ export class PedidosApiService {
       catchError(this.handleError));
   }
 
+  getPedidosPorFiltros(representante: string, cliente: string, datainicio: string, 
+                        datafim: string, estado: string, cidade: string, 
+                        situacao: string, cdsupervisor: string): Observable<any> {
+    const url = environment.apiURL + 'recuperarPedidosPorFiltros';
+    const data = {
+      representante: representante,
+      cliente: cliente,
+      datainicio: datainicio,
+      datafim: datafim,
+      estado: estado,
+      cidade: cidade,
+      situacao: situacao,
+      cdsupervisor: cdsupervisor
+    };
+    console.log(data);
+
+    const httpOptionsLogin = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'})
+    };
+
+    return this.http.post(url, data, httpOptionsLogin).pipe(
+      timeout(10000),
+      map(this.extractData),
+      catchError(this.handleError));
+  }
+
   getItensPedido(codigo: string): Observable<any> {
     const url = environment.apiURL + 'recuperarItensPorPedido';
     const data = {
       cdpedido: +codigo
+    };
+    console.log(data);
+
+    const httpOptionsLogin = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'})
+    };
+
+    return this.http.post(url, data, httpOptionsLogin).pipe(
+      timeout(10000),
+      map(this.extractData),
+      catchError(this.handleError));
+  }
+
+  getItensPorIdsPedidos(codigo: string): Observable<any> {
+    const url = environment.apiURL + 'recuperarItensPorIdsPedidos';
+    const data = {
+      ids: codigo
     };
     console.log(data);
 

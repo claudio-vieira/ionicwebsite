@@ -26,6 +26,11 @@ export class AppComponent {
       title: 'Histórico de pedidos',
       url: '/historico-pedido',
       icon: 'filing'
+    },
+    {
+      title: 'Histórico de pedidos filtros',
+      url: '/historico-pedido-filtros',
+      icon: 'filing'
     }
   ];
 

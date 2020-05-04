@@ -33,6 +33,10 @@ const routes: Routes = [
   {
     path: 'historico-pedido',
     loadChildren: './historico-pedido/historico-pedido.module#HistoricoPedidoPageModule'
+  },
+  {
+    path: 'historico-pedido-filtros',
+    loadChildren: './historico-pedido-filtros/historico-pedido.module#HistoricoPedidoPageModule'
   }
 ];
 
