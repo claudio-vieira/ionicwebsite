@@ -5,6 +5,7 @@ import { ResumoPedidoPage } from './../resumo-pedido/resumo-pedido.page';
 import { Funcoes } from './../Funcoes';
 import { PedidosApiService } from './../services/pedidos-api.service';
 import { LocalidadesApiService } from './../services/localidades-api.service';
+import { RepresentanteApiService } from './../services/representante-api.service';
 import { NavController, LoadingController, ToastController, ModalController, AlertController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 
@@ -62,22 +63,32 @@ export class HistoricoPedidoPage implements OnInit {
   constructor(public navCtrl: NavController,
               private api: PedidosApiService,
               private apiLocalidades: LocalidadesApiService,
+              private apiRepresentante: RepresentanteApiService,
               public modalController: ModalController,
               private alertController: AlertController,
               public loadingController: LoadingController,
               public toastController: ToastController) { }
 
   ngOnInit() {
-    this.getEstados();
+    this.getEstados("");
 
     this.situacoes = [];
     this.situacoes.push('TODOS');
     this.situacoes.push('FATURADOS');
     this.situacoes.push('ASEREMENVIADOS');
     this.situacoes.push('CANCELADO');
+
+    var dataFim = new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[0] +"-"+
+               new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[1] +"-"+
+               new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[2];
+    this.dataFimSelected = dataFim+"T00:00:00.000";
+
+    var dataInicio = new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[0] +"-"+
+               new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[1] +"-01";
+    this.dataInicioSelected = dataInicio+"T00:00:00.000";
   }
 
-  async getEstados(){
+  async getEstados(uf: string){
     
     const loading = await this.loadingController.create({
       message: 'Aguarde...',
@@ -89,7 +100,11 @@ export class HistoricoPedidoPage implements OnInit {
       .subscribe(res => {
 
         for (const item of res) {
-          this.estados.push({id:item.id, sigla: item.sigla});
+          if(uf != ""){
+            if(uf === item.sigla) this.estados.push({id:item.id, sigla: item.sigla});
+          }else{
+            this.estados.push({id:item.id, sigla: item.sigla});
+          }
         }
 
         loading.dismiss();
@@ -165,6 +180,30 @@ export class HistoricoPedidoPage implements OnInit {
 
   setarRepresentante(representanteSelected: any){
     this.representanteSelected = representanteSelected;
+  }
+
+  async buscarEstadoRepresentante(representanteSelected: any){
+    
+    const loading = await this.loadingController.create({
+      message: 'Aguarde...',
+      duration: 10000
+    });
+    await loading.present();
+    this.apiRepresentante.recuperarVendedorPorNomeCodigo(representanteSelected).subscribe(res => {
+      console.log('enrtrei no subscribe do post');
+
+      if(res != null && res.data_sellers != null && res.data_sellers[0] != null){
+        this.getEstados(res.data_sellers[0].uf);
+      }else{
+        this.getEstados("");
+      }
+
+      loading.dismiss();
+    }, err => {
+      console.log(err);
+      alert(err);
+      loading.dismiss();
+    });
   }
 
   setarCliente(clienteSelected: any){

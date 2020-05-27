@@ -22,13 +22,13 @@ export class AppComponent {
       url: '/pedidos',
       icon: 'home'
     },
-    {
+    /*{
       title: 'Histórico de pedidos',
       url: '/historico-pedido',
       icon: 'filing'
-    },
+    },*/
     {
-      title: 'Histórico de pedidos filtros',
+      title: 'Histórico de pedidos',
       url: '/historico-pedido-filtros',
       icon: 'filing'
     }

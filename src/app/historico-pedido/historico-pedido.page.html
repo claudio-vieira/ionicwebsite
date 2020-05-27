@@ -11,9 +11,9 @@
 
 <ion-content>
 
-  <ion-searchbar mode="ios" [(ngModel)]="representante" (ionChange)="filtrarPedidos()" color="light" placeholder="Representante"
+  <!-- <ion-searchbar mode="ios" [(ngModel)]="representante" (ionChange)="filtrarPedidos()" color="light" placeholder="Representante"
     class="filtro">
-  </ion-searchbar>
+  </ion-searchbar> -->
 
   <ion-searchbar mode="ios" [(ngModel)]="filtro" (ionChange)="filtrarPedidos()" color="light" placeholder="Filtrar"
   class="filtro">
@@ -21,7 +21,7 @@
 
   <ion-list>
 
-    <ion-fab vertical="top" horizontal="end" slot="fixed">
+    <!-- <ion-fab vertical="top" horizontal="end" slot="fixed">
       <ion-fab-button>
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
@@ -39,7 +39,7 @@
         </ion-fab-button>
         
       </ion-fab-list>
-    </ion-fab>
+    </ion-fab> -->
 
     <ion-card mode="ios" *ngFor="let pedido of pedidosFiltrados" color="light">
       <ion-card-content>

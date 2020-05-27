@@ -30,10 +30,10 @@ const routes: Routes = [
     path: 'ultimo-pedido',
     loadChildren: './ultimo-pedido/ultimo-pedido.module#UltimoPedidoPageModule'
   },
-  {
+  /*{
     path: 'historico-pedido',
     loadChildren: './historico-pedido/historico-pedido.module#HistoricoPedidoPageModule'
-  },
+  },*/
   {
     path: 'historico-pedido-filtros',
     loadChildren: './historico-pedido-filtros/historico-pedido.module#HistoricoPedidoPageModule'

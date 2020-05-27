@@ -12,7 +12,7 @@
 <ion-content>
 
   <ion-searchbar mode="ios" [(ngModel)]="representanteSelected" (ionChange)="setarRepresentante(representanteSelected)" color="light" placeholder="Representante"
-    class="filtro">
+    class="filtro" (ionBlur)="buscarEstadoRepresentante(representanteSelected)">
   </ion-searchbar>
 
   <ion-searchbar mode="ios" [(ngModel)]="clienteSelected" (ionChange)="setarCliente(clienteSelected)" color="light" placeholder="Cliente"
@@ -21,12 +21,12 @@
 
 <ion-item class="datetimePeriodoLeft">
   <ion-label position="floating">Inicio</ion-label>
-  <ion-datetime displayFormat="DD/MM/YYYY" min="1970-01-01" max="2050-12-31" value="2020-04-27T15:03:46.789" [(ngModel)]="dataInicioSelected" (ionChange)="setarDataInicio(dataInicioSelected)"></ion-datetime>
+  <ion-datetime displayFormat="DD/MM/YYYY" min="1970-01-01" max="2050-12-31" [(ngModel)]="dataInicioSelected" (ionChange)="setarDataInicio(dataInicioSelected)"></ion-datetime>
 </ion-item>
 
 <ion-item class="datetimePeriodoRight">
   <ion-label position="floating">Término</ion-label>
-  <ion-datetime displayFormat="DD/MM/YYYY" min="1970-01-01" max="2050-12-31" value="2020-04-27T15:03:46.789" [(ngModel)]="dataFimSelected" (ionChange)="setarDataFim(dataFimSelected)"></ion-datetime>
+  <ion-datetime displayFormat="DD/MM/YYYY" min="1970-01-01" max="2050-12-31" [(ngModel)]="dataFimSelected" (ionChange)="setarDataFim(dataFimSelected)"></ion-datetime>
 </ion-item>
 <div class="searchFilter">
   <ion-item class="filterFloatLeft">
