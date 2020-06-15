@@ -7,7 +7,7 @@ import { catchError, map, timeout } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class RepresentanteApiService {
+export class SupervisoresApiService {
 
   constructor(private http: HttpClient) { }
 
@@ -30,9 +30,14 @@ export class RepresentanteApiService {
     return res;
   }
 
-  recuperarVendedorPorNomeCodigo(nome: string): Observable<any> {
-    const url = environment.apiURL + 'recuperarVendedorPorNomeCodigo';
-    const data = {nome};
+  recuperarSupervisorPorCodigoGorduraAnoMes(codigo: string): Observable<any> {
+    var dateObj = new Date();
+    var month = dateObj.getUTCMonth() + 1; //months from 1-12
+    var year = dateObj.getUTCFullYear();
+    var anomes = year+""+(month.toString.length == 1 ? "0"+month : month);
+
+    const url = environment.apiURL + 'recuperarSupervisorPorCodigoGorduraAnoMes';
+    const data = {codigo, anomes};
 
     console.log(data);
 
@@ -46,7 +51,7 @@ export class RepresentanteApiService {
       catchError(this.handleError));
   }
 
-  recuperarVendedorPorCdSupervisor(cdsupervisor: string): Observable<any> {
+  /*recuperarVendedorPorCdSupervisor(cdsupervisor: string): Observable<any> {
     const url = environment.apiURL + 'recuperarVendedorPorCdSupervisor';
     const data = {cdsupervisor};
 
@@ -60,5 +65,5 @@ export class RepresentanteApiService {
       timeout(10000),
       map(this.extractData),
       catchError(this.handleError));
-  }
+  }*/
 }

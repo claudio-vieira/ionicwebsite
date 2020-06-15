@@ -15,6 +15,22 @@
     class="filtro">
   </ion-searchbar>
 
+  <div class="bar bar-header bar-stable">
+    <h1 class="title">Flex</h1>
+  </div>
+
+  <div class="bar bar-header bar-stable display-inline-block">
+    <h2 class="title">Inicio: R$ {{saldoGorduraInicio.toString().replace(".",",")}}</h2>
+  </div>
+
+  <div class="bar bar-header bar-stable display-inline-block">
+    <h2 class="title">Usado: R$ {{saldoGorduraUsado.toString().replace(".",",")}}</h2>
+  </div>
+
+  <div class="bar bar-header bar-stable display-inline-block">
+    <h2 class="title">Disponivel: R$ {{(saldoGorduraInicio - saldoGorduraUsado).toString().replace(".",",")}}</h2>
+  </div>
+
   <ion-list>
 
     <ion-card mode="ios" *ngFor="let pedido of pedidosFiltrados" color="light">
@@ -80,8 +96,10 @@
         <!-- DADOS DO PEDIDO -->
         <div>
           <ion-label class="titulo">N pedido: </ion-label>
-          <ion-label>{{pedido.cdpedido}} </ion-label>
-          &nbsp;
+          <ion-label *ngIf="pedido.cdvenda == 'V'">{{pedido.cdpedido}} - VENDA</ion-label>
+          <ion-label *ngIf="pedido.cdvenda == 'B'">{{pedido.cdpedido}} - BONOFICACAO</ion-label>
+        </div>
+        <div>
           <ion-label class="titulo">Data: </ion-label>
           <ion-label>{{pedido.dtpedido | date: 'dd/MM/yyyy' }} {{pedido.hrpedido}}</ion-label>
         </div>
@@ -126,6 +144,21 @@
         <div>
           <ion-label class="titulo">Peso Liquido | Peso Bruto | Volume | Produtos: </ion-label>
           <ion-label>{{pedido.pesoliquidototal }} | {{pedido.pesobrutototal }} | {{pedido.totalvolume}} | {{pedido.totalprodutos}}</ion-label>
+        </div>
+
+        <div>
+          <ion-label *ngIf="pedido.motivousogordurasupervisor != '' " class="titulo">Motivo Uso Gordura Supervisor: </ion-label>
+          <ion-label>{{pedido.motivousogordurasupervisor}}</ion-label>
+        </div>
+
+        <div>
+          <ion-label *ngIf="pedido.descricaoHistoricoGordura != '' && pedido.descricaoHistoricoGordura != null " class="titulo">Forma de pagamento: </ion-label>
+          <ion-label>{{pedido.descricaoHistoricoGordura}}</ion-label>
+        </div>
+
+        <div>
+          <ion-label *ngIf="pedido.motivousogordura != '' && pedido.motivousogordura != null " class="titulo">Motivo Uso Gordura Representante: </ion-label>
+          <ion-label>{{pedido.motivousogordura}}</ion-label>
         </div>
         <!-- <div *ngIf="pedido.pesobrutototal">
           <ion-label class="titulo">Peso bruto: </ion-label>

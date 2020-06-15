@@ -7,7 +7,7 @@ import { catchError, map, timeout } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class RepresentanteApiService {
+export class ClientesApiService {
 
   constructor(private http: HttpClient) { }
 
@@ -30,35 +30,21 @@ export class RepresentanteApiService {
     return res;
   }
 
-  recuperarVendedorPorNomeCodigo(nome: string): Observable<any> {
-    const url = environment.apiURL + 'recuperarVendedorPorNomeCodigo';
-    const data = {nome};
-
-    console.log(data);
-
-    const httpOptions = {
+  getCidadesPorPedidosPorCliente(cdvendedor: string, uf: string): Observable<any> {
+    const url = environment.apiURL + 'recuperarCidadesPorPedidosPorCliente';
+    const data = {
+        cdvendedor: cdvendedor,
+        uf: uf
+    };
+    //console.log(data);
+    const httpOptionsLogin = {
       headers: new HttpHeaders({'Content-Type': 'application/json'})
     };
 
-    return this.http.post(url, data, httpOptions).pipe(
+    return this.http.post(url, data, httpOptionsLogin).pipe(
       timeout(10000),
       map(this.extractData),
       catchError(this.handleError));
   }
 
-  recuperarVendedorPorCdSupervisor(cdsupervisor: string): Observable<any> {
-    const url = environment.apiURL + 'recuperarVendedorPorCdSupervisor';
-    const data = {cdsupervisor};
-
-    console.log(data);
-
-    const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json'})
-    };
-
-    return this.http.post(url, data, httpOptions).pipe(
-      timeout(10000),
-      map(this.extractData),
-      catchError(this.handleError));
-  }
 }

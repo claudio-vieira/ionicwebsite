@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { ResumoPedidoPage } from './../resumo-pedido/resumo-pedido.page';
 import { Funcoes } from './../Funcoes';
 import { PedidosApiService } from './../services/pedidos-api.service';
+import { SupervisoresApiService } from './../services/supervisores-api-service';
 import { NavController, LoadingController, ToastController, ModalController, AlertController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 
@@ -21,15 +22,23 @@ export class PedidosPage implements OnInit {
   pedidoItens: any = [{}];
   subject: Subject<boolean>;
 
+  saldoGorduraInicio: any;
+  saldoGorduraUsado: any;
+
   constructor(public navCtrl: NavController,
               private api: PedidosApiService,
+              private apiSupervisores: SupervisoresApiService,
               public modalController: ModalController,
               private alertController: AlertController,
               public loadingController: LoadingController,
               public toastController: ToastController) { }
 
   ngOnInit() {
+    this.saldoGorduraInicio = 0;
+    this.saldoGorduraUsado = 0;
+
     this.getPedidos();
+    this.getSupervisor();
   }
 
   async buscarDetalhesPedido(pedido: any) {
@@ -98,6 +107,35 @@ export class PedidosPage implements OnInit {
         if (this.pedidos.length !== 0) {
         } else {
           Funcoes.mensagem(this.toastController, 'Sem pedidos');
+        }
+      }, err => {
+        console.log(err);
+        alert(err);
+        loading.dismiss();
+      });
+  }
+
+  async getSupervisor() {
+
+    const loading = await this.loadingController.create({
+      message: 'Aguarde...',
+      duration: 10000
+    });
+    await loading.present();
+
+    const cdSupervisor = window.localStorage.getItem('cdSupervisor');
+    this.apiSupervisores.recuperarSupervisorPorCodigoGorduraAnoMes(cdSupervisor)
+      .subscribe(res => {
+        var sup = res.data_supervisores;
+        this.saldoGorduraInicio = sup.saldogordurainicio;
+        this.saldoGorduraUsado = sup.saldogordurausado;
+        loading.dismiss();
+
+        console.log(this.saldoGorduraInicio);
+        console.log(this.saldoGorduraUsado);
+        if (sup !== undefined && sup.codigo != "") {
+        } else {
+          Funcoes.mensagem(this.toastController, 'Sem Supervisores');
         }
       }, err => {
         console.log(err);
@@ -349,22 +387,36 @@ async liberarPedido(pedido: any) {
   });
   await loading.present();
 
-  this.api.liberarPedido(pedido.vendedorCodigo, pedido.cdpedido, pedido.cdcliente).subscribe(res => {
-
-    if (res.message != null) {
-      Funcoes.mensagem(this.toastController, res.message);
-    }
-    if (res.status === 'success') {
-      this.removerPedidoDaLista(pedido);
-      this.api.processarPedidos();
-    }
-
+  if(pedido.descricaoHistoricoGordura != 'BONIFICACAO' &&
+    pedido.valalorPendenteGordura > (this.saldoGorduraInicio - this.saldoGorduraUsado)){
+    Funcoes.mensagem(this.toastController, 'Não há saldo suficiente de gordura!');
     loading.dismiss();
+  }else{
+    console.log("foi");
+    
+    var dateObj = new Date();
+    var month = dateObj.getUTCMonth() + 1; //months from 1-12
+    var year = dateObj.getUTCFullYear();
+    var anomes = year+""+(month.toString.length == 1 ? "0"+month : month);
 
-  }, err => {
-    console.log(err);
-    alert(err);
-    loading.dismiss();
-  });
+    this.api.liberarPedido(pedido.vendedorCodigo, pedido.cdpedido, pedido.cdcliente, pedido.valalorPendenteGordura, anomes).subscribe(res => {
+
+      if (res.message != null) {
+        Funcoes.mensagem(this.toastController, res.message);
+      }
+      if (res.status === 'success') {
+        this.removerPedidoDaLista(pedido);
+        this.api.processarPedidos();
+        this.getSupervisor();
+      }
+
+      loading.dismiss();
+
+    }, err => {
+      console.log(err);
+      alert(err);
+      loading.dismiss();
+    });
+  }
 }
 }

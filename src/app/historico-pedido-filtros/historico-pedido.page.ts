@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { ResumoPedidoPage } from './../resumo-pedido/resumo-pedido.page';
 import { Funcoes } from './../Funcoes';
 import { PedidosApiService } from './../services/pedidos-api.service';
+import { ClientesApiService } from './../services/clientes-api.service';
 import { LocalidadesApiService } from './../services/localidades-api.service';
 import { RepresentanteApiService } from './../services/representante-api.service';
 import { NavController, LoadingController, ToastController, ModalController, AlertController } from '@ionic/angular';
@@ -25,7 +26,8 @@ export class HistoricoPedidoPage implements OnInit {
   isEstadoAvailable = false; // Declare the variable (in this case isItemAvailable) and initialize the items with false
   estados: any[];
   cidades: any[];
-  
+  representantes: any[];
+
   representanteSelected: string;
   clienteSelected: string;
   estadoSelected: string;
@@ -37,7 +39,7 @@ export class HistoricoPedidoPage implements OnInit {
   dataFimSelected: string;
   isSintetico: boolean;
 
-  situacoes: string[];
+  situacoes: any[];
 
   pesosBrutoB = 0; //Biscoito
   pesosBrutoM = 0; //Macarrao
@@ -64,6 +66,7 @@ export class HistoricoPedidoPage implements OnInit {
               private api: PedidosApiService,
               private apiLocalidades: LocalidadesApiService,
               private apiRepresentante: RepresentanteApiService,
+              private apiClientes: ClientesApiService,
               public modalController: ModalController,
               private alertController: AlertController,
               public loadingController: LoadingController,
@@ -71,12 +74,17 @@ export class HistoricoPedidoPage implements OnInit {
 
   ngOnInit() {
     this.getEstados("");
+    this.getRepresentantes();
 
     this.situacoes = [];
-    this.situacoes.push('TODOS');
+    this.situacoes.push({nome:'Situação', id: "1"});
+    this.situacoes.push({nome:'FATURADOS', id: "2"});
+    this.situacoes.push({nome:'ASEREMENVIADOS', id: "0"});
+    this.situacoes.push({nome:'CANCELADO', id: "9"});
+    /*this.situacoes.push('TODOS');
     this.situacoes.push('FATURADOS');
     this.situacoes.push('ASEREMENVIADOS');
-    this.situacoes.push('CANCELADO');
+    this.situacoes.push('CANCELADO');*/
 
     var dataFim = new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[0] +"-"+
                new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[1] +"-"+
@@ -96,9 +104,9 @@ export class HistoricoPedidoPage implements OnInit {
     });
     await loading.present();
     this.estados = [];
+    this.estados.push({sigla:'Estados', id: "0"});
     this.apiLocalidades.getEstados()
       .subscribe(res => {
-
         for (const item of res) {
           if(uf != ""){
             if(uf === item.sigla) this.estados.push({id:item.id, sigla: item.sigla});
@@ -128,21 +136,47 @@ export class HistoricoPedidoPage implements OnInit {
     });
     await loading.present();
     this.cidades = [];
+    this.cidades.push({nome:'Cidades', id: "0"});
 
-    if(estadoSelected > 0){
+    //Recupera todas as cidades por estado quando nao tem representante
+    if(estadoSelected > 0 && (this.representanteSelected == undefined || this.representanteSelected == "0")){
       this.apiLocalidades.getCidadesPorIdentificador(estadoSelected)
         .subscribe(res => {
 
           for (const item of res) {
             if(this.cidades.map(function(e) { return e.id; }).indexOf(item.id) == -1){
-              this.cidades.push({id:item.id, nome:item.nome});
+              this.cidades.push({id:item.id, nome:item.nome.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")});
             }
           }
           loading.dismiss();
 
-          if (this.estados.length !== 0) {
+          if (this.cidades.length !== 0) {
           } else {
-            Funcoes.mensagem(this.toastController, 'Sem estados');
+            Funcoes.mensagem(this.toastController, 'Sem cidades');
+          }
+        }, err => {
+          console.log(err);
+          alert(err);
+          loading.dismiss();
+        });
+    }
+    //Recupera cidades relacionadas com o representante
+    else{
+      this.apiClientes.getCidadesPorPedidosPorCliente(this.representanteSelected, this.estadoSelectedUF)
+        .subscribe(res => {
+          //console.log("res", res);
+          if(res != null && res.data_cidades != null && res.data_cidades[0] != null){
+            for (const item of res.data_cidades) {
+              //console.log("item", item);
+              this.cidades.push({id:"0", nome:item.cidade});
+            }
+          }
+
+          loading.dismiss();
+
+          if (this.cidades != undefined && this.cidades.length !== 0) {
+          } else {
+            Funcoes.mensagem(this.toastController, 'Sem cidades');
           }
         }, err => {
           console.log(err);
@@ -152,19 +186,54 @@ export class HistoricoPedidoPage implements OnInit {
     }
   }
 
+  async getRepresentantes(){
+    
+    const loading = await this.loadingController.create({
+      message: 'Aguarde...',
+      duration: 10000
+    });
+    
+    const cdSupervisor = window.localStorage.getItem('cdSupervisor');
+    
+    await loading.present();
+    
+    this.representantes = [];
+    this.representantes.push({nome:'Representante', codigo: "0"});
+    this.apiRepresentante.recuperarVendedorPorCdSupervisor(cdSupervisor)
+      .subscribe(res => {
+        
+        if(res != null && res.data_sellers != null && res.data_sellers[0] != null){
+          for (const item of res.data_sellers) {
+            this.representantes.push(item);
+          }
+        }
+
+        loading.dismiss();
+
+        if (this.representantes != undefined && this.representantes.length !== 0) {
+        } else {
+          Funcoes.mensagem(this.toastController, 'Sem representantes');
+        }
+      }, err => {
+        console.log(err);
+        alert(err);
+        loading.dismiss();
+      });
+  }
+
   setarEstado(estadoSelected: any){
     for (var estadoId of this.estados) {
       if(estadoId.id == estadoSelected){
         this.estadoSelectedUF = estadoId.sigla;
       }
     }
-
-    this.getCidades(estadoSelected);
+    console.log("estadoSelected.sigla", estadoSelected.sigla);
+    if(estadoSelected.sigla != "Estados") this.getCidades(estadoSelected);
   }
   
   setarCidade(cidadeSelected: any){
     for (var cidadeId of this.cidades) {
-      if(cidadeId.id == cidadeSelected){
+      if(cidadeId.nome == cidadeSelected){
         this.cidadeSelectedNome = cidadeId.nome;
       }
     }
@@ -180,6 +249,12 @@ export class HistoricoPedidoPage implements OnInit {
 
   setarRepresentante(representanteSelected: any){
     this.representanteSelected = representanteSelected;
+    this.buscarEstadoRepresentante(representanteSelected);
+
+    /*if(this.representanteSelected != undefined && this.representanteSelected != "" &&
+        this.estadoSelectedUF != undefined && this.estadoSelectedUF != ""){*/
+          //this.getCidades(0);
+      //}
   }
 
   async buscarEstadoRepresentante(representanteSelected: any){
@@ -189,9 +264,9 @@ export class HistoricoPedidoPage implements OnInit {
       duration: 10000
     });
     await loading.present();
+    
     this.apiRepresentante.recuperarVendedorPorNomeCodigo(representanteSelected).subscribe(res => {
       console.log('enrtrei no subscribe do post');
-
       if(res != null && res.data_sellers != null && res.data_sellers[0] != null){
         this.getEstados(res.data_sellers[0].uf);
       }else{
@@ -212,6 +287,7 @@ export class HistoricoPedidoPage implements OnInit {
 
   switchSintetico(isSintetico: boolean){
     this.isSintetico = isSintetico;
+
     if(!isSintetico && this.pedidosFiltrados.length > 0 && 
       this.quantidadesB == 0 &&
       this.quantidadesM == 0 &&
@@ -235,30 +311,30 @@ export class HistoricoPedidoPage implements OnInit {
   montarValoresSintetico(itens: any = [{}]){
 
     for(const item of itens){
-      
-      if(item.produtoEspecie == 1){//Macarrao
-        this.valoresM = this.valoresM + (item.precovenda * item.qtdeproduto);
-        this.pesosBrutoM = this.pesosBrutoM + item.produtoPesobruto;
-        this.pesosLiquidoM = this.pesosLiquidoM + item.produtoPesoliquido;
-        this.volumesM = this.volumesM + item.qtdeproduto;
+      //console.log("item",item);
+      if(item.especie == 1){//Macarrao
+        this.valoresM = this.valoresM + item.valortotal//(item.precovenda * item.qtdeproduto);
+        this.pesosBrutoM = this.pesosBrutoM + item.pesototal//item.pesobruto;
+        this.pesosLiquidoM = this.pesosLiquidoM + item.pesoliqtotal//item.pesoliquido;
+        this.volumesM = this.volumesM + item.volumetotal//item.qtdeproduto;
         this.quantidadesM++;
-      }else if(item.produtoEspecie == 2){//Biscoito
-        this.valoresB = this.valoresB + (item.precovenda * item.qtdeproduto);
-        this.pesosBrutoB = this.pesosBrutoB + item.produtoPesobruto;
-        this.pesosLiquidoB = this.pesosLiquidoB + item.produtoPesoliquido;
-        this.volumesB = this.volumesB + item.qtdeproduto;
+      }else if(item.especie == 2){//Biscoito
+        this.valoresB = this.valoresB + item.valortotal//(item.precovenda * item.qtdeproduto);
+        this.pesosBrutoB = this.pesosBrutoB + item.pesototal//item.pesobruto;
+        this.pesosLiquidoB = this.pesosLiquidoB + item.pesoliqtotal//item.pesoliquido;
+        this.volumesB = this.volumesB + item.volumetotal//item.qtdeproduto;
         this.quantidadesB++;
-      }else if(item.produtoEspecie == 4){//Farinhas
-        this.valoresF = this.valoresF + (item.precovenda * item.qtdeproduto);
-        this.pesosBrutoF = this.pesosBrutoF + item.produtoPesobruto;
-        this.pesosLiquidoF = this.pesosLiquidoF + item.produtoPesoliquido;
-        this.volumesF = this.volumesF + item.qtdeproduto;
+      }else if(item.especie == 4){//Farinhas
+        this.valoresF = this.valoresF + item.valortotal//(item.precovenda * item.qtdeproduto);
+        this.pesosBrutoF = this.pesosBrutoF + item.pesototal//item.pesobruto;
+        this.pesosLiquidoF = this.pesosLiquidoF + item.pesoliqtotal//item.pesoliquido;
+        this.volumesF = this.volumesF + item.volumetotal//item.qtdeproduto;
         this.quantidadesF++;
-      }else if(item.produtoEspecie == 6){//Revenda
-        this.valoresR = this.valoresR + (item.precovenda * item.qtdeproduto);
-        this.pesosBrutoR = this.pesosBrutoR + item.produtoPesobruto;
-        this.pesosLiquidoR = this.pesosLiquidoR + item.produtoPesoliquido;
-        this.volumesR = this.volumesR + item.qtdeproduto;
+      }else if(item.especie == 6){//Revenda
+        this.valoresR = this.valoresR + item.valortotal//(item.precovenda * item.qtdeproduto);
+        this.pesosBrutoR = this.pesosBrutoR + item.pesototal//item.pesobruto;
+        this.pesosLiquidoR = this.pesosLiquidoR + item.pesoliqtotal//item.pesoliquido;
+        this.volumesR = this.volumesR + item.volumetotal//item.qtdeproduto;
         this.quantidadesR++;
       }
     }
@@ -338,22 +414,41 @@ export class HistoricoPedidoPage implements OnInit {
       duration: 10000
     });
     await loading.present();
-
+    //console.log("representanteSelected", this.representanteSelected);
+    
     const cdSupervisor = window.localStorage.getItem('cdSupervisor');
+    
+    console.log("representanteSelected", this.representanteSelected);
+    console.log("clienteSelected", this.clienteSelected);
+    console.log("estadoSelectedUF", this.estadoSelectedUF);
+    console.log("cidadeSelectedNome", this.cidadeSelectedNome);
+    console.log("situacaoSelected", this.situacaoSelected);
+    
     this.api.getPedidosPorFiltros(
-          (this.representanteSelected === undefined ? "" : this.representanteSelected), 
+          (this.representanteSelected === undefined || this.representanteSelected == "0" ? "" : this.representanteSelected), 
           (this.clienteSelected === undefined ? "" : this.clienteSelected), 
           (this.dataInicioSelected === undefined ? "" : this.dataInicioSelected.substring(8,10)+"/"+this.dataInicioSelected.substring(5,7)+"/"+this.dataInicioSelected.substring(0,4)), 
           (this.dataFimSelected === undefined ? "" : this.dataFimSelected.substring(8,10)+"/"+this.dataFimSelected.substring(5,7)+"/"+this.dataFimSelected.substring(0,4)), 
-          (this.estadoSelectedUF === undefined ? "" : this.estadoSelectedUF), 
-          (this.cidadeSelectedNome === undefined ? "" : Funcoes.replaceAccents(this.cidadeSelectedNome)), 
-          (this.situacaoSelected === undefined ? "" : this.situacaoSelected), 
+          (this.estadoSelectedUF === undefined || this.estadoSelectedUF == "Estados" ? "" : this.estadoSelectedUF), 
+          (this.cidadeSelectedNome === undefined || this.cidadeSelectedNome == "Cidades" ? "" : Funcoes.replaceAccents(this.cidadeSelectedNome)), 
+          (this.situacaoSelected === undefined || this.situacaoSelected == "1" ? "" : this.situacaoSelected), 
           cdSupervisor)
       .subscribe(res => {
         this.pedidos = res.data_pedidos;
         this.pedidosFiltrados = this.pedidos;
 
         this.resetarValoresSintetico();
+        
+        //Recalcula os valores sintéticos
+        if(this.isSintetico){
+          var ids = "";
+          for(const pedido of this.pedidosFiltrados){
+            ids += pedido.cdpedido+",";
+          }
+          ids = ids.substring(0, ids.length-1);
+
+          this.getItensPedidoSemCalculo(ids);
+        } 
 
         loading.dismiss();
 
@@ -366,52 +461,6 @@ export class HistoricoPedidoPage implements OnInit {
         alert(err);
         loading.dismiss();
       });
-  }
-
-  async confirmarLiberarPedido(pedido: any) {
-    const alert = await this.alertController.create({
-      message: 'Deseja liberar o pedido "' + pedido.cdpedido + '" ?',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: (blah) => {
-
-          }
-        }, {
-          text: 'Sim',
-          handler: () => {
-            this.liberarPedido(pedido);
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
-
-  async confirmarRejeitarPedido(pedido: any) {
-    const alert = await this.alertController.create({
-      message: 'Deseja rejeitar o pedido "' + pedido.cdpedido + '" ?',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: (blah) => {
-
-          }
-        }, {
-          text: 'Sim',
-          handler: () => {
-            this.rejeitarPedido(pedido);
-          }
-        }
-      ]
-    });
-
-    await alert.present();
   }
 
   removerPedidoDaLista(pedido: any) {
@@ -548,12 +597,13 @@ export class HistoricoPedidoPage implements OnInit {
   async getItensPedidoSemCalculo(ids: string) {
 
     const loading = await this.loadingController.create({
-      message: 'Aguarde aqui...',
+      message: 'Aguarde...',
       duration: 10000
     });
     await loading.present();
-    console.log("ids", ids);
-    this.api.getItensPorIdsPedidos(ids).subscribe(res => {
+    //console.log("ids", ids);
+
+    this.api.getItensPorIdsPedidos(ids, this.representanteSelected).subscribe(res => {
       console.log('enrtrei no subscribe do get');
       console.log(res);
       if (this.subject) {
@@ -602,60 +652,6 @@ export class HistoricoPedidoPage implements OnInit {
   loading.dismiss();
 });
   }
-
-async rejeitarPedido(pedido: any) {
-
-  const loading = await this.loadingController.create({
-    message: 'Aguarde...',
-    duration: 10000
-  });
-  await loading.present();
-
-  this.api.rejeitarPedido(pedido.vendedorCodigo, pedido.cdpedido, pedido.cdcliente).subscribe(res => {
-
-    if (res.status === 'success') {
-      this.removerPedidoDaLista(pedido);
-    }
-
-    if (res.message != null) {
-      Funcoes.mensagem(this.toastController, res.message);
-
-    }
-    loading.dismiss();
-
-  }, err => {
-    console.log(err);
-    alert(err);
-    loading.dismiss();
-  });
-}
-
-async liberarPedido(pedido: any) {
-
-  const loading = await this.loadingController.create({
-    message: 'Aguarde...',
-    duration: 10000
-  });
-  await loading.present();
-
-  this.api.liberarPedido(pedido.vendedorCodigo, pedido.cdpedido, pedido.cdcliente).subscribe(res => {
-
-    if (res.message != null) {
-      Funcoes.mensagem(this.toastController, res.message);
-    }
-    if (res.status === 'success') {
-      this.removerPedidoDaLista(pedido);
-      this.api.processarPedidos();
-    }
-
-    loading.dismiss();
-
-  }, err => {
-    console.log(err);
-    alert(err);
-    loading.dismiss();
-  });
-}
 
   resetarValoresSintetico(){
     this.pesosBrutoB = 0;

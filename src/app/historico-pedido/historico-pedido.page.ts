@@ -106,51 +106,51 @@ export class HistoricoPedidoPage implements OnInit {
       });
   }
 
-  async confirmarLiberarPedido(pedido: any) {
-    const alert = await this.alertController.create({
-      message: 'Deseja liberar o pedido "' + pedido.cdpedido + '" ?',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: (blah) => {
+  // async confirmarLiberarPedido(pedido: any) {
+  //   const alert = await this.alertController.create({
+  //     message: 'Deseja liberar o pedido "' + pedido.cdpedido + '" ?',
+  //     buttons: [
+  //       {
+  //         text: 'Cancelar',
+  //         role: 'cancel',
+  //         cssClass: 'secondary',
+  //         handler: (blah) => {
 
-          }
-        }, {
-          text: 'Sim',
-          handler: () => {
-            this.liberarPedido(pedido);
-          }
-        }
-      ]
-    });
+  //         }
+  //       }, {
+  //         text: 'Sim',
+  //         handler: () => {
+  //           this.liberarPedido(pedido);
+  //         }
+  //       }
+  //     ]
+  //   });
 
-    await alert.present();
-  }
+  //   await alert.present();
+  // }
 
-  async confirmarRejeitarPedido(pedido: any) {
-    const alert = await this.alertController.create({
-      message: 'Deseja rejeitar o pedido "' + pedido.cdpedido + '" ?',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: (blah) => {
+  // async confirmarRejeitarPedido(pedido: any) {
+  //   const alert = await this.alertController.create({
+  //     message: 'Deseja rejeitar o pedido "' + pedido.cdpedido + '" ?',
+  //     buttons: [
+  //       {
+  //         text: 'Cancelar',
+  //         role: 'cancel',
+  //         cssClass: 'secondary',
+  //         handler: (blah) => {
 
-          }
-        }, {
-          text: 'Sim',
-          handler: () => {
-            this.rejeitarPedido(pedido);
-          }
-        }
-      ]
-    });
+  //         }
+  //       }, {
+  //         text: 'Sim',
+  //         handler: () => {
+  //           this.rejeitarPedido(pedido);
+  //         }
+  //       }
+  //     ]
+  //   });
 
-    await alert.present();
-  }
+  //   await alert.present();
+  // }
 
   removerPedidoDaLista(pedido: any) {
     this.pedidos = this.pedidos.filter(obj => obj !== pedido);
@@ -313,58 +313,4 @@ export class HistoricoPedidoPage implements OnInit {
   loading.dismiss();
 });
   }
-
-async rejeitarPedido(pedido: any) {
-
-  const loading = await this.loadingController.create({
-    message: 'Aguarde...',
-    duration: 10000
-  });
-  await loading.present();
-
-  this.api.rejeitarPedido(pedido.vendedorCodigo, pedido.cdpedido, pedido.cdcliente).subscribe(res => {
-
-    if (res.status === 'success') {
-      this.removerPedidoDaLista(pedido);
-    }
-
-    if (res.message != null) {
-      Funcoes.mensagem(this.toastController, res.message);
-
-    }
-    loading.dismiss();
-
-  }, err => {
-    console.log(err);
-    alert(err);
-    loading.dismiss();
-  });
-}
-
-async liberarPedido(pedido: any) {
-
-  const loading = await this.loadingController.create({
-    message: 'Aguarde...',
-    duration: 10000
-  });
-  await loading.present();
-
-  this.api.liberarPedido(pedido.vendedorCodigo, pedido.cdpedido, pedido.cdcliente).subscribe(res => {
-
-    if (res.message != null) {
-      Funcoes.mensagem(this.toastController, res.message);
-    }
-    if (res.status === 'success') {
-      this.removerPedidoDaLista(pedido);
-      this.api.processarPedidos();
-    }
-
-    loading.dismiss();
-
-  }, err => {
-    console.log(err);
-    alert(err);
-    loading.dismiss();
-  });
-}
 }

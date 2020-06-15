@@ -11,9 +11,15 @@
 
 <ion-content>
 
-  <ion-searchbar mode="ios" [(ngModel)]="representanteSelected" (ionChange)="setarRepresentante(representanteSelected)" color="light" placeholder="Representante"
+  <!-- <ion-searchbar mode="ios" [(ngModel)]="representanteSelected" (ionChange)="setarRepresentante(representanteSelected)" color="light" placeholder="Representante"
     class="filtro" (ionBlur)="buscarEstadoRepresentante(representanteSelected)">
-  </ion-searchbar>
+  </ion-searchbar> -->
+  <ion-item>
+    <ion-label *ngIf="!representanteSelected">Representantes</ion-label>
+    <ion-select style="max-width: 100% !important;" mode="ios" [(ngModel)]="representanteSelected" (ionChange)="setarRepresentante(representanteSelected)">
+      <ion-select-option *ngFor="let representante of representantes" value="{{representante.codigo}}">{{representante.nome}}</ion-select-option>
+    </ion-select>
+  </ion-item>
 
   <ion-searchbar mode="ios" [(ngModel)]="clienteSelected" (ionChange)="setarCliente(clienteSelected)" color="light" placeholder="Cliente"
     class="filtro"> 
@@ -30,21 +36,21 @@
 </ion-item>
 <div class="searchFilter">
   <ion-item class="filterFloatLeft">
-    <ion-label>Estado</ion-label>
+    <ion-label *ngIf="!estadoSelected">Estado</ion-label>
     <ion-select mode="ios" [(ngModel)]="estadoSelected" (ionChange)="setarEstado(estadoSelected)">
       <ion-select-option *ngFor="let estado of estados" value="{{estado.id}}">{{estado.sigla}}</ion-select-option>
     </ion-select>
   </ion-item>
   <ion-item class="filterFloatLeft">
-    <ion-label>Cidade</ion-label>
-    <ion-select mode="ios" [(ngModel)]="cidadeSelected" (ionChange)="setarCidade(cidadeSelected)">
-      <ion-select-option *ngFor="let cidade of cidades" value="{{cidade.id}}">{{cidade.nome}}</ion-select-option>
+    <ion-label *ngIf="!cidadeSelected">Cidade</ion-label>
+    <ion-select style="max-width: 100% !important;" mode="ios" [(ngModel)]="cidadeSelected" (ionChange)="setarCidade(cidadeSelected)">
+      <ion-select-option *ngFor="let cidade of cidades" value="{{cidade.nome}}">{{cidade.nome}}</ion-select-option>
     </ion-select>
   </ion-item>
   <ion-item class="filterFloatLeft">
-    <ion-label>Situação</ion-label>
-    <ion-select mode="ios" [(ngModel)]="situacaoSelected" (ionChange)="setarSituacao(situacaoSelected)">
-      <ion-select-option *ngFor="let situacao of situacoes" value="{{situacao}}">{{situacao}}</ion-select-option>
+    <ion-label *ngIf="!situacaoSelected">Situação</ion-label>
+    <ion-select style="max-width: 100% !important;" mode="ios" [(ngModel)]="situacaoSelected" (ionChange)="setarSituacao(situacaoSelected)">
+      <ion-select-option *ngFor="let situacao of situacoes" value="{{situacao.id}}">{{situacao.nome}}</ion-select-option>
     </ion-select>
   </ion-item>
 </div>

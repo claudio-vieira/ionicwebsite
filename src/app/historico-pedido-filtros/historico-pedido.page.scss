@@ -1,15 +1,77 @@
-.datetimePeriodoLeft{
-    width: 50%;
-    float: left;
-  }
+/// @prop - Color of the alert input placeholders
+//$select-placeholder:  #999 !default;
 
-  .datetimePeriodoRight{
-    width: 50%;
-  }
-  .searchFilter{
-    display: flex;
-  }
-  .filterFloatLeft{
-    float: left;
-    width: 33.3%;
-  }
+.datetimePeriodoLeft{
+  width: 50%;
+  float: left;
+}
+
+.datetimePeriodoRight{
+  width: 50%;
+}
+.searchFilter{
+  display: flex;
+}
+.filterFloatLeft{
+  float: left;
+  width: 33.3%;
+}
+
+.welcome-card img {
+  max-height: 35vh;
+  overflow: hidden;
+}
+
+.titulo{
+  font-weight: bold;
+}
+
+.tituloItem {
+  font-weight: bold;
+  padding-left: 10px;
+}
+
+.tituloVerm {
+  font-weight: bold;
+  color: red;
+}
+
+.Verm {
+  color: red;
+}
+
+.subItem {
+  font-size: large;
+  font-weight: bold;
+}
+
+.expand-wrapper {
+  height: 0;
+  transition: 0.2s linear;
+}  
+
+.collapsed {
+  height: 0 !important;
+}
+
+ion-fab-button[data-desc] {
+  position: relative;
+}
+
+ion-fab-button[data-desc]::after {
+  position: absolute;
+  content: attr(data-desc);
+  z-index: 1;
+  right: 55px;
+  bottom: 4px;
+  background-color: var(--ion-color-light);
+  padding: 9px;
+  border-radius: 15px;
+  color: black;
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14), 0 1px 18px 0 rgba(0,0,0,0.12);
+}
+
+:host(.select-placeholder) {
+  //@include placeholder($select-placeholder);
+  opacity: 100%;
+}

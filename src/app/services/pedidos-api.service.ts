@@ -90,10 +90,11 @@ export class PedidosApiService {
       catchError(this.handleError));
   }
 
-  getItensPorIdsPedidos(codigo: string): Observable<any> {
-    const url = environment.apiURL + 'recuperarItensPorIdsPedidos';
+  getItensPorIdsPedidos(codigo: string, cdvendedor: string): Observable<any> {
+    const url = environment.apiURL + 'recuperarItensIdsPedidoPorCodigo';
     const data = {
-      ids: codigo
+      ids: codigo,
+      idvendedor: cdvendedor
     };
     console.log(data);
 
@@ -145,12 +146,16 @@ export class PedidosApiService {
       catchError(this.handleError));
   }
 
-  liberarPedido(cdvendedor: string, cdpedido: string, cdcliente: string): Observable<any> {
+  liberarPedido(cdvendedor: string, cdpedido: string, cdcliente: string, gorduraliberada: any, dataliberada: string): Observable<any> {
     const url = environment.apiURL + 'liberarPedidoPendente';
+    const cdsupervisor = window.localStorage.getItem('cdSupervisor');
     const data = {
         cdvendedor,
         cdpedido,
-        cdcliente
+        cdcliente,
+        cdsupervisor,
+        gorduraliberada,
+        dataliberada
     };
 
     console.log(data);
