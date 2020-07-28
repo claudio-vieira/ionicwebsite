@@ -53,11 +53,15 @@ export class LoginPage implements OnInit {
 
         if (this.supervisor != null) {
 
-          window.localStorage.setItem('cdSupervisor', this.supervisor.codigo);
-          window.localStorage.setItem('nomeSupervisor', this.supervisor.descricao);
+          if(this.supervisor.situacao == 'I'){
+            Funcoes.mensagem(this.toastController, 'Supervisor inativo!');
+          }else{
+            
+            window.localStorage.setItem('cdSupervisor', this.supervisor.codigo);
+            window.localStorage.setItem('nomeSupervisor', this.supervisor.descricao);
 
-          this.goToPedidos();
-
+            this.goToPedidos();
+          }
         } else {
           Funcoes.mensagem(this.toastController, 'Supervisor não encontrado');
         }

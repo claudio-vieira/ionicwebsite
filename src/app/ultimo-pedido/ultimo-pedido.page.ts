@@ -34,7 +34,7 @@ export class UltimoPedidoPage implements OnInit {
     });
     await loading.present();
 
-    return this.api.getItensPedido(pedido.cdpedido).toPromise().then(res => {
+    return this.api.getItensPedido(pedido.cdpedido, pedido.cdvendedor, pedido.cdcliente).toPromise().then(res => {
       pedido.itensDoPedido = res.data_itens;
       loading.dismiss();
       this.calcularDadosDosItens(pedido);

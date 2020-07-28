@@ -34,7 +34,7 @@ export class RepresentanteApiService {
     const url = environment.apiURL + 'recuperarVendedorPorNomeCodigo';
     const data = {nome};
 
-    console.log(data);
+    //console.log(data);
 
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -50,7 +50,7 @@ export class RepresentanteApiService {
     const url = environment.apiURL + 'recuperarVendedorPorCdSupervisor';
     const data = {cdsupervisor};
 
-    console.log(data);
+    //console.log(data);
 
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'})

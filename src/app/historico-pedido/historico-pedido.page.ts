@@ -94,7 +94,7 @@ export class HistoricoPedidoPage implements OnInit {
         this.pedidosFiltrados = this.pedidos;
         loading.dismiss();
 
-        console.log(this.pedidos);
+        //console.log(this.pedidos);
         if (this.pedidos.length !== 0) {
         } else {
           Funcoes.mensagem(this.toastController, 'Sem pedidos');
@@ -265,9 +265,9 @@ export class HistoricoPedidoPage implements OnInit {
     });
     await loading.present();
 
-    this.api.getItensPedido(pedido.cdpedido).subscribe(res => {
+    this.api.getItensPedido(pedido.cdpedido, pedido.cdvendedor, pedido.cdcliente).subscribe(res => {
       console.log('enrtrei no subscribe do get');
-      console.log(res);
+      //console.log(res);
       if (this.subject) {
         this.subject.next(true);
       }

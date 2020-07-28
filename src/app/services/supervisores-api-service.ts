@@ -39,7 +39,7 @@ export class SupervisoresApiService {
     const url = environment.apiURL + 'recuperarSupervisorPorCodigoGorduraAnoMes';
     const data = {codigo, anomes};
 
-    console.log(data);
+    //console.log(data);
 
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'})

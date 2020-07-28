@@ -19,9 +19,7 @@ export class PedidosApiService {
     } else {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,
-      console.error(
-        'Backend returned code ${error.status}, ' +
-        'body was: ${error.error}');
+      console.error('Tente novamente! Pode ter sido ocilação de internet.');
     }
     // return an observable with a user-facing error message
     return throwError('Something bad happened; please try again later.');
@@ -35,7 +33,7 @@ export class PedidosApiService {
     const data = {
       cdsupervisor: +codigo
     };
-    console.log(data);
+    //console.log(data);
 
     const httpOptionsLogin = {
       headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -61,7 +59,7 @@ export class PedidosApiService {
       situacao: situacao,
       cdsupervisor: cdsupervisor
     };
-    console.log(data);
+    //console.log(data);
 
     const httpOptionsLogin = {
       headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -73,10 +71,12 @@ export class PedidosApiService {
       catchError(this.handleError));
   }
 
-  getItensPedido(codigo: string): Observable<any> {
+  getItensPedido(codigo: string, cdvendedor: string, cdcliente: string): Observable<any> {
     const url = environment.apiURL + 'recuperarItensPorPedido';
     const data = {
-      cdpedido: +codigo
+      cdpedido: +codigo,
+      cdvendedor: +cdvendedor,
+      cdcliente: +cdcliente
     };
     console.log(data);
 
@@ -96,7 +96,7 @@ export class PedidosApiService {
       ids: codigo,
       idvendedor: cdvendedor
     };
-    console.log(data);
+    //console.log(data);
 
     const httpOptionsLogin = {
       headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -126,6 +126,25 @@ export class PedidosApiService {
       catchError(this.handleError));
   }
 
+  getUltimoPedidoHistorico(cdvendedor: string, cdsupervisor: string, cdcliente: string, cdpedido: string): Observable<any> {
+    const url = environment.apiURL + 'recuperarUltimoPedidoPorCodigoClienteHistorico';
+    const data = {
+        cdvendedor,
+        cdsupervisor,
+        cdcliente,
+        cdpedido
+    };
+
+    const httpOptionsLogin = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'})
+    };
+
+    return this.http.post(url, data, httpOptionsLogin).pipe(
+      timeout(10000),
+      map(this.extractData),
+      catchError(this.handleError));
+  }
+
   rejeitarPedido(cdvendedor: string, cdpedido: string, cdcliente: string): Observable<any> {
     const url = environment.apiURL + 'rejeitarPedidoPendente';
     const data = {
@@ -134,7 +153,7 @@ export class PedidosApiService {
         cdcliente
     };
 
-    console.log(data);
+    //console.log(data);
 
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -158,7 +177,7 @@ export class PedidosApiService {
         dataliberada
     };
 
-    console.log(data);
+    //console.log(data);
 
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'})

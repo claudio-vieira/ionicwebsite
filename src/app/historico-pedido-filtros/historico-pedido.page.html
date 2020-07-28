@@ -17,7 +17,7 @@
   <ion-item>
     <ion-label *ngIf="!representanteSelected">Representantes</ion-label>
     <ion-select style="max-width: 100% !important;" mode="ios" [(ngModel)]="representanteSelected" (ionChange)="setarRepresentante(representanteSelected)">
-      <ion-select-option *ngFor="let representante of representantes" value="{{representante.codigo}}">{{representante.nome}}</ion-select-option>
+      <ion-select-option *ngFor="let representante of representantes" value="{{representante.codigo}}">{{representante.codigo}} - {{representante.nome}}</ion-select-option>
     </ion-select>
   </ion-item>
 
@@ -37,7 +37,7 @@
 <div class="searchFilter">
   <ion-item class="filterFloatLeft">
     <ion-label *ngIf="!estadoSelected">Estado</ion-label>
-    <ion-select mode="ios" [(ngModel)]="estadoSelected" (ionChange)="setarEstado(estadoSelected)">
+    <ion-select style="max-width: 100% !important;" mode="ios" [(ngModel)]="estadoSelected" (ionChange)="setarEstado(estadoSelected)">
       <ion-select-option *ngFor="let estado of estados" value="{{estado.id}}">{{estado.sigla}}</ion-select-option>
     </ion-select>
   </ion-item>
@@ -144,7 +144,7 @@
         <div>
           <ion-label class="titulo">R$ Desc/Acres:</ion-label>
           <ion-label>{{pedido.totalvenda }} -  {{ pedido.totaltabela }}</ion-label>
-          <ion-label *ngIf="pedido.totaltabela < pedido.totalvenda"> essa{{pedido.totalvenda - pedido.totaltabela | currency:'&nbsp;' }} (+)</ion-label>
+          <ion-label *ngIf="pedido.totaltabela < pedido.totalvenda"> {{pedido.totalvenda - pedido.totaltabela | currency:'&nbsp;' }} (+)</ion-label>
           <ion-label *ngIf="pedido.totaltabela > pedido.totalvenda"> {{pedido.totaltabela - pedido.totalvenda | currency:'&nbsp;' }} (-)</ion-label>
           <ion-label *ngIf="pedido.totaltabela == pedido.totalvenda">&nbsp; 0,00</ion-label>
         </div>

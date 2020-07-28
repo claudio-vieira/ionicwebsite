@@ -19,7 +19,7 @@
     <h1 class="title">Flex</h1>
   </div>
 
-  <div class="bar bar-header bar-stable display-inline-block">
+  <!-- <div class="bar bar-header bar-stable display-inline-block">
     <h2 class="title">Inicio: R$ {{saldoGorduraInicio.toString().replace(".",",")}}</h2>
   </div>
 
@@ -29,7 +29,30 @@
 
   <div class="bar bar-header bar-stable display-inline-block">
     <h2 class="title">Disponivel: R$ {{(saldoGorduraInicio - saldoGorduraUsado).toString().replace(".",",")}}</h2>
-  </div>
+  </div> -->
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div>
+          <h2 class="title">Inicio:</h2>
+          <h2 class="title">R$ {{saldoGorduraInicio.toString().replace(".",",")}}</h2>
+        </div>
+      </ion-col>
+      <ion-col>
+        <div>
+          <h2 class="title">Usado:</h2>
+          <h2 class="title">R$ {{saldoGorduraUsado.toString().replace(".",",")}}</h2>
+        </div>
+      </ion-col>
+      <ion-col>
+        <div>
+          <h2 class="title">Disponivel:</h2>
+          <h2 class="title">R$ {{(saldoGorduraInicio - saldoGorduraUsado).toString().replace(".",",")}}</h2>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
   <ion-list>
 
@@ -147,7 +170,7 @@
         </div>
 
         <div>
-          <ion-label *ngIf="pedido.motivousogordurasupervisor != '' " class="titulo">Motivo Uso Gordura Supervisor: </ion-label>
+          <ion-label *ngIf="pedido.motivousogordurasupervisor != '' " class="titulo">Motivo: </ion-label>
           <ion-label>{{pedido.motivousogordurasupervisor}}</ion-label>
         </div>
 
@@ -157,7 +180,7 @@
         </div>
 
         <div>
-          <ion-label *ngIf="pedido.motivousogordura != '' && pedido.motivousogordura != null " class="titulo">Motivo Uso Gordura Representante: </ion-label>
+          <ion-label *ngIf="pedido.motivousogordura != '' && pedido.motivousogordura != null " class="titulo">Motivo: </ion-label>
           <ion-label>{{pedido.motivousogordura}}</ion-label>
         </div>
         <!-- <div *ngIf="pedido.pesobrutototal">

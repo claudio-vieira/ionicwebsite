@@ -103,7 +103,7 @@ export class PedidosPage implements OnInit {
         this.pedidosFiltrados = this.pedidos;
         loading.dismiss();
 
-        console.log(this.pedidos);
+        //console.log(this.pedidos);
         if (this.pedidos.length !== 0) {
         } else {
           Funcoes.mensagem(this.toastController, 'Sem pedidos');
@@ -131,14 +131,13 @@ export class PedidosPage implements OnInit {
         this.saldoGorduraUsado = sup.saldogordurausado;
         loading.dismiss();
 
-        console.log(this.saldoGorduraInicio);
-        console.log(this.saldoGorduraUsado);
+        //console.log("res", res);
         if (sup !== undefined && sup.codigo != "") {
         } else {
           Funcoes.mensagem(this.toastController, 'Sem Supervisores');
         }
       }, err => {
-        console.log(err);
+        //console.log("err", err);
         alert(err);
         loading.dismiss();
       });
@@ -303,9 +302,9 @@ export class PedidosPage implements OnInit {
     });
     await loading.present();
 
-    this.api.getItensPedido(pedido.cdpedido).subscribe(res => {
+    this.api.getItensPedido(pedido.cdpedido, pedido.cdvendedor, pedido.cdcliente).subscribe(res => {
       console.log('enrtrei no subscribe do get');
-      console.log(res);
+      //console.log(res);
       if (this.subject) {
         this.subject.next(true);
       }
@@ -392,7 +391,6 @@ async liberarPedido(pedido: any) {
     Funcoes.mensagem(this.toastController, 'Não há saldo suficiente de gordura!');
     loading.dismiss();
   }else{
-    console.log("foi");
     
     var dateObj = new Date();
     var month = dateObj.getUTCMonth() + 1; //months from 1-12

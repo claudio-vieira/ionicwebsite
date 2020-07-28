@@ -18,7 +18,7 @@ import { Component, OnInit } from '@angular/core';
 export class HistoricoPedidoPage implements OnInit {
 
   pedidos: any = [{}];
-  pedidosFiltrados: any = [{}];
+  pedidosFiltrados: any[];
   filtro = '';
   panelOpenState = false;
   pedidoItens: any = [{}];
@@ -104,7 +104,7 @@ export class HistoricoPedidoPage implements OnInit {
     });
     await loading.present();
     this.estados = [];
-    this.estados.push({sigla:'Estados', id: "0"});
+    this.estados.push({sigla:'Estado - Todos', id: "0"});
     this.apiLocalidades.getEstados()
       .subscribe(res => {
         for (const item of res) {
@@ -136,7 +136,7 @@ export class HistoricoPedidoPage implements OnInit {
     });
     await loading.present();
     this.cidades = [];
-    this.cidades.push({nome:'Cidades', id: "0"});
+    this.cidades.push({nome:'Cidade - Todas', id: "0"});
 
     //Recupera todas as cidades por estado quando nao tem representante
     if(estadoSelected > 0 && (this.representanteSelected == undefined || this.representanteSelected == "0")){
@@ -227,8 +227,8 @@ export class HistoricoPedidoPage implements OnInit {
         this.estadoSelectedUF = estadoId.sigla;
       }
     }
-    console.log("estadoSelected.sigla", estadoSelected.sigla);
-    if(estadoSelected.sigla != "Estados") this.getCidades(estadoSelected);
+    //console.log("estadoSelected.sigla", estadoSelected.sigla);
+    if(estadoSelected.sigla != "Estado - Todos") this.getCidades(estadoSelected);
   }
   
   setarCidade(cidadeSelected: any){
@@ -287,8 +287,8 @@ export class HistoricoPedidoPage implements OnInit {
 
   switchSintetico(isSintetico: boolean){
     this.isSintetico = isSintetico;
-
-    if(!isSintetico && this.pedidosFiltrados.length > 0 && 
+    
+    if(!isSintetico && this.pedidosFiltrados != undefined && this.pedidosFiltrados.length > 0 && 
       this.quantidadesB == 0 &&
       this.quantidadesM == 0 &&
       this.quantidadesF == 0 &&
@@ -348,7 +348,7 @@ export class HistoricoPedidoPage implements OnInit {
     this.pesosLiquidoF.toFixed(2);
     this.pesosLiquidoR.toFixed(2);
     
-    console.log("pesosBrutoM",this.pesosBrutoM);
+    //console.log("pesosBrutoM",this.pesosBrutoM);
   }
 
   setarSituacao(situacaoSelected: any){
@@ -418,25 +418,25 @@ export class HistoricoPedidoPage implements OnInit {
     
     const cdSupervisor = window.localStorage.getItem('cdSupervisor');
     
-    console.log("representanteSelected", this.representanteSelected);
-    console.log("clienteSelected", this.clienteSelected);
-    console.log("estadoSelectedUF", this.estadoSelectedUF);
-    console.log("cidadeSelectedNome", this.cidadeSelectedNome);
-    console.log("situacaoSelected", this.situacaoSelected);
+    // console.log("representanteSelected", this.representanteSelected);
+    // console.log("clienteSelected", this.clienteSelected);
+    // console.log("estadoSelectedUF", this.estadoSelectedUF);
+    // console.log("cidadeSelectedNome", this.cidadeSelectedNome);
+    // console.log("situacaoSelected", this.situacaoSelected);
     
     this.api.getPedidosPorFiltros(
           (this.representanteSelected === undefined || this.representanteSelected == "0" ? "" : this.representanteSelected), 
           (this.clienteSelected === undefined ? "" : this.clienteSelected), 
           (this.dataInicioSelected === undefined ? "" : this.dataInicioSelected.substring(8,10)+"/"+this.dataInicioSelected.substring(5,7)+"/"+this.dataInicioSelected.substring(0,4)), 
           (this.dataFimSelected === undefined ? "" : this.dataFimSelected.substring(8,10)+"/"+this.dataFimSelected.substring(5,7)+"/"+this.dataFimSelected.substring(0,4)), 
-          (this.estadoSelectedUF === undefined || this.estadoSelectedUF == "Estados" ? "" : this.estadoSelectedUF), 
-          (this.cidadeSelectedNome === undefined || this.cidadeSelectedNome == "Cidades" ? "" : Funcoes.replaceAccents(this.cidadeSelectedNome)), 
+          (this.estadoSelectedUF === undefined || this.estadoSelectedUF == "Estado - Todos" ? "" : this.estadoSelectedUF), 
+          (this.cidadeSelectedNome === undefined || this.cidadeSelectedNome == "Cidade - Todas" ? "" : Funcoes.replaceAccents(this.cidadeSelectedNome)), 
           (this.situacaoSelected === undefined || this.situacaoSelected == "1" ? "" : this.situacaoSelected), 
           cdSupervisor)
       .subscribe(res => {
         this.pedidos = res.data_pedidos;
         this.pedidosFiltrados = this.pedidos;
-
+        //console.log("res", res);
         this.resetarValoresSintetico();
         
         //Recalcula os valores sintéticos
@@ -513,7 +513,7 @@ export class HistoricoPedidoPage implements OnInit {
   }
 
   async abrirItensPedido(pedido: any) {
-    console.log("pedido.itensDoPedido", pedido.itensDoPedido);
+    //console.log("pedido.itensDoPedido", pedido.itensDoPedido);
     if (pedido.itensDoPedido) {
       this.abrirItensPedidoModal(pedido);
     } else {
@@ -530,7 +530,7 @@ export class HistoricoPedidoPage implements OnInit {
   }
 
   async abrirItensPedidoModal(pedido) {
-    console.log("pedido", pedido);
+    //console.log("pedido", pedido);
     const modal = await this.modalController.create({
       component: ItensPedidoPage,
       componentProps: {
@@ -541,7 +541,8 @@ export class HistoricoPedidoPage implements OnInit {
   }
 
   async abrirUltimoPedido(pedido: any) {
-
+    //console.log("AQUI", pedido.ultimoPedido);
+    //console.log("AQUI", pedido.vendedorNuUltimopedido);
     if (pedido.ultimoPedido) {
 
       this.abrirUltimoPedidoModal(pedido);
@@ -577,9 +578,9 @@ export class HistoricoPedidoPage implements OnInit {
     });
     await loading.present();
 
-    this.api.getItensPedido(pedido.cdpedido).subscribe(res => {
+    this.api.getItensPedido(pedido.cdpedido, pedido.cdvendedor, pedido.cdcliente).subscribe(res => {
       console.log('enrtrei no subscribe do get');
-      console.log(res);
+      //console.log(res);
       if (this.subject) {
         this.subject.next(true);
       }
@@ -603,22 +604,27 @@ export class HistoricoPedidoPage implements OnInit {
     await loading.present();
     //console.log("ids", ids);
 
-    this.api.getItensPorIdsPedidos(ids, this.representanteSelected).subscribe(res => {
-      console.log('enrtrei no subscribe do get');
-      console.log(res);
-      if (this.subject) {
-        this.subject.next(true);
-      }
-      this.montarValoresSintetico(res.data_itens);
-      //this.calcularDadosDosItens(pedido);
-      loading.dismiss();
-    }, err => {
-      console.log(err);
-      alert(err);
-      loading.dismiss();
-    });
+    if(this.representanteSelected == undefined){
+      this.representanteSelected = '';
+    }
 
-    
+    if(ids != undefined && ids != ""){
+      this.api.getItensPorIdsPedidos(ids, this.representanteSelected).subscribe(res => {
+        console.log('enrtrei no subscribe do get');
+        //console.log(res);
+        if (this.subject) {
+          this.subject.next(true);
+        }
+        this.montarValoresSintetico(res.data_itens);
+        //this.calcularDadosDosItens(pedido);
+        loading.dismiss();
+      }, err => {
+        console.log(err);
+        alert(err);
+        loading.dismiss();
+      });
+    }
+
   }
 
   async consultarUltimoPedido(pedido: any) {
@@ -631,7 +637,7 @@ export class HistoricoPedidoPage implements OnInit {
 
     const cdSupervisor = window.localStorage.getItem('cdSupervisor');
 
-    this.api.getUltimoPedido(pedido.vendedorCodigo, cdSupervisor, pedido.cdcliente).subscribe(res => {
+    this.api.getUltimoPedidoHistorico(pedido.vendedorCodigo, cdSupervisor, pedido.cdcliente, pedido.cdpedido).subscribe(res => {
 
       if (!res) {
         loading.dismiss();
