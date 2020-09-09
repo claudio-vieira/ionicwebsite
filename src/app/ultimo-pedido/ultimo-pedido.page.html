@@ -71,7 +71,7 @@
         </div>    
         <div>
           <ion-label class="titulo">Peso Liquido | Peso Bruto | Volume | Produtos: </ion-label>
-          <ion-label>{{pedido.pesoliquidototal }} | {{pedido.pesobrutototal }} | {{pedido.totalvolume}} | {{pedido.totalprodutos}}</ion-label>
+          <ion-label>{{pedido.pesoliquidototal| currency:'&nbsp;' }} | {{pedido.pesobrutototal| currency:'&nbsp;' }} | {{pedido.totalvolume}} | {{pedido.totalprodutos}}</ion-label>
         </div>
         <!-- DADOS DO PEDIDO -->
     </ion-card-content>
@@ -132,7 +132,7 @@
         </div>    
         <div>
           <ion-label class="titulo">Peso Liquido | Peso Bruto | Volume | Produtos: </ion-label>
-          <ion-label>{{pedidoAnterior.pesoliquidototal }} | {{pedidoAnterior.pesobrutototal }} | {{pedidoAnterior.totalvolume}} | {{pedidoAnterior.totalprodutos}}</ion-label>
+          <ion-label>{{pedidoAnterior.pesoliquidototal| currency:'&nbsp;' }} | {{pedidoAnterior.pesobrutototal| currency:'&nbsp;' }} | {{pedidoAnterior.totalvolume}} | {{pedidoAnterior.totalprodutos}}</ion-label>
         </div>
         <!-- DADOS DO PEDIDO -->
     </ion-card-content>

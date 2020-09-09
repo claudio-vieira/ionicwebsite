@@ -8,11 +8,14 @@ import { HistoricoPedidoPageRoutingModule } from './historico-pedido-routing.mod
 
 import { HistoricoPedidoPage } from './historico-pedido.page';
 
+import { Ionic4DatepickerModule } from '@logisticinfotech/ionic4-datepicker';
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    Ionic4DatepickerModule,
     HistoricoPedidoPageRoutingModule
   ],
   declarations: [HistoricoPedidoPage]

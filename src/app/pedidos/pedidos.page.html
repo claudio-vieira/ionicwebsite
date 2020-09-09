@@ -36,19 +36,19 @@
       <ion-col>
         <div>
           <h2 class="title">Inicio:</h2>
-          <h2 class="title">R$ {{saldoGorduraInicio.toFixed(2).toString().replace(".",",")}}</h2>
+          <h2 class="title">R${{saldoGorduraInicio | currency:'&nbsp;'}}</h2>
         </div>
       </ion-col>
       <ion-col>
         <div>
           <h2 class="title">Usado:</h2>
-          <h2 class="title">R$ {{saldoGorduraUsado.toFixed(2).toString().replace(".",",")}}</h2>
+          <h2 class="title">R${{saldoGorduraUsado | currency:'&nbsp;'}}</h2>
         </div>
       </ion-col>
       <ion-col>
         <div>
           <h2 class="title">Disponivel:</h2>
-          <h2 class="title">R$ {{(saldoGorduraInicio - saldoGorduraUsado).toFixed(2).toString().replace(".",",")}}</h2>
+          <h2 class="title">R${{(saldoGorduraInicio - saldoGorduraUsado) | currency:'&nbsp;'}}</h2>
         </div>
       </ion-col>
     </ion-row>
@@ -136,7 +136,7 @@
         </div>
         <div>
           <ion-label class="titulo">R$ Desc/Acres:</ion-label>
-          <ion-label>{{pedido.totalvenda }} -  {{ pedido.totaltabela }}</ion-label>
+          <ion-label>{{pedido.totalvenda| currency:'&nbsp;' }} - {{ pedido.totaltabela| currency:'&nbsp;' }}</ion-label>
           <ion-label *ngIf="pedido.totaltabela < pedido.totalvenda"> essa{{pedido.totalvenda - pedido.totaltabela | currency:'&nbsp;' }} (+)</ion-label>
           <ion-label *ngIf="pedido.totaltabela > pedido.totalvenda"> {{pedido.totaltabela - pedido.totalvenda | currency:'&nbsp;' }} (-)</ion-label>
           <ion-label *ngIf="pedido.totaltabela == pedido.totalvenda">&nbsp; 0,00</ion-label>
@@ -166,7 +166,7 @@
 
         <div>
           <ion-label class="titulo">Peso Liquido | Peso Bruto | Volume | Produtos: </ion-label>
-          <ion-label>{{pedido.pesoliquidototal }} | {{pedido.pesobrutototal }} | {{pedido.totalvolume}} | {{pedido.totalprodutos}}</ion-label>
+          <ion-label>{{pedido.pesoliquidototal| currency:'&nbsp;' }} | {{pedido.pesobrutototal| currency:'&nbsp;' }} | {{pedido.totalvolume}} | {{pedido.totalprodutos}}</ion-label>
         </div>
 
         <div>

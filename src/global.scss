@@ -24,3 +24,11 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+.li-ionic4-datePicker {
+    .modal-wrapper {
+        height: 470px;
+        max-height: 100%;
+        width: 312px;
+    }
+}

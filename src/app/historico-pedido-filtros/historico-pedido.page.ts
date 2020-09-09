@@ -9,6 +9,7 @@ import { LocalidadesApiService } from './../services/localidades-api.service';
 import { RepresentanteApiService } from './../services/representante-api.service';
 import { NavController, LoadingController, ToastController, ModalController, AlertController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
+import { Ionic4DatepickerModalComponent } from '@logisticinfotech/ionic4-datepicker';
 
 @Component({
   selector: 'app-historico-pedido',
@@ -35,8 +36,8 @@ export class HistoricoPedidoPage implements OnInit {
   cidadeSelected: string;
   cidadeSelectedNome: string;
   situacaoSelected: string;
-  dataInicioSelected: string;
-  dataFimSelected: string;
+  dataInicioSelected: any;
+  dataFimSelected: any;
   isSintetico: boolean;
 
   situacoes: any[];
@@ -62,6 +63,11 @@ export class HistoricoPedidoPage implements OnInit {
   valoresF = 0;
   valoresR = 0;
 
+  myDate: any;
+
+  selectedDate: any;
+  datePickerObj: any = {};
+
   constructor(public navCtrl: NavController,
               private api: PedidosApiService,
               private apiLocalidades: LocalidadesApiService,
@@ -86,14 +92,42 @@ export class HistoricoPedidoPage implements OnInit {
     this.situacoes.push('ASEREMENVIADOS');
     this.situacoes.push('CANCELADO');*/
 
-    var dataFim = new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[0] +"-"+
-               new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[1] +"-"+
-               new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[2];
-    this.dataFimSelected = dataFim+"T00:00:00.000";
+    this.dataFimSelected = new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[1]+"/"+
+              new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[2]+"/"+
+              new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[0];
 
-    var dataInicio = new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[0] +"-"+
-               new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[1] +"-01";
-    this.dataInicioSelected = dataInicio+"T00:00:00.000";
+    this.dataInicioSelected = "01/"+new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[1]
+                              +"/"+new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[0];
+
+    this.datePickerObj = {
+      dateFormat: 'DD/MM/YYYY', // default DD MMM YYYY
+      clearButton: false,   // default true
+      momentLocale: 'pt-BR', // Default 'en-US'
+      setLabel: 'Selecionar',  // default 'Set'
+      todayLabel: 'Hoje', // default 'Today'
+      closeLabel: 'Fechar', // default 'Close'
+      monthsList: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Aug", "Set", "Out", "Nov", "Dec"],
+      weeksList: ["D", "S", "T", "Q", "Q", "S", "S"]
+    };
+    
+  }
+
+  async openDatePicker() {
+    const datePickerModal = await this.modalController.create({
+      component: Ionic4DatepickerModalComponent,
+      cssClass: 'li-ionic4-datePicker',
+      componentProps: { 
+         'objConfig': this.datePickerObj, 
+         'selectedDate': this.selectedDate 
+      }
+    });
+    await datePickerModal.present();
+ 
+    datePickerModal.onDidDismiss()
+      .then((data) => {
+        //console.log(data);
+        this.selectedDate = new Date(data.data.date);
+      });
   }
 
   async getEstados(uf: string){
@@ -104,7 +138,6 @@ export class HistoricoPedidoPage implements OnInit {
     });
     await loading.present();
     this.estados = [];
-    this.estados.push({sigla:'Estado - Todos', id: "0"});
     this.apiLocalidades.getEstados()
       .subscribe(res => {
         for (const item of res) {
@@ -114,6 +147,17 @@ export class HistoricoPedidoPage implements OnInit {
             this.estados.push({id:item.id, sigla: item.sigla});
           }
         }
+
+        this.estados = this.estados.sort(function (a, b) {
+          if (a.sigla > b.sigla) {
+            return 1;
+          }
+          if (a.sigla < b.sigla) {
+            return -1;
+          }
+          return 0;
+        });
+        this.estados.unshift({sigla:'Estado - Todos', id: "0"});
 
         loading.dismiss();
 
@@ -161,7 +205,8 @@ export class HistoricoPedidoPage implements OnInit {
         });
     }
     //Recupera cidades relacionadas com o representante
-    else{
+    else if(this.representanteSelected != undefined && this.representanteSelected != ""
+      && this.estadoSelectedUF != undefined && this.estadoSelectedUF != ""){
       this.apiClientes.getCidadesPorPedidosPorCliente(this.representanteSelected, this.estadoSelectedUF)
         .subscribe(res => {
           //console.log("res", res);
@@ -183,6 +228,8 @@ export class HistoricoPedidoPage implements OnInit {
           alert(err);
           loading.dismiss();
         });
+    }else{
+      loading.dismiss();
     }
   }
 
@@ -265,6 +312,12 @@ export class HistoricoPedidoPage implements OnInit {
     });
     await loading.present();
     
+    //Limpar os campos ao trocar o representante
+    this.estadoSelected = '0';
+    this.cidades = [];
+    this.cidades.push({nome:'Cidade - Todas', id: "0"});
+    this.cidadeSelected = 'Cidade - Todas';
+
     this.apiRepresentante.recuperarVendedorPorNomeCodigo(representanteSelected).subscribe(res => {
       console.log('enrtrei no subscribe do post');
       if(res != null && res.data_sellers != null && res.data_sellers[0] != null){
@@ -272,7 +325,6 @@ export class HistoricoPedidoPage implements OnInit {
       }else{
         this.getEstados("");
       }
-
       loading.dismiss();
     }, err => {
       console.log(err);
@@ -423,12 +475,14 @@ export class HistoricoPedidoPage implements OnInit {
     // console.log("estadoSelectedUF", this.estadoSelectedUF);
     // console.log("cidadeSelectedNome", this.cidadeSelectedNome);
     // console.log("situacaoSelected", this.situacaoSelected);
-    
+
     this.api.getPedidosPorFiltros(
           (this.representanteSelected === undefined || this.representanteSelected == "0" ? "" : this.representanteSelected), 
           (this.clienteSelected === undefined ? "" : this.clienteSelected), 
-          (this.dataInicioSelected === undefined ? "" : this.dataInicioSelected.substring(8,10)+"/"+this.dataInicioSelected.substring(5,7)+"/"+this.dataInicioSelected.substring(0,4)), 
-          (this.dataFimSelected === undefined ? "" : this.dataFimSelected.substring(8,10)+"/"+this.dataFimSelected.substring(5,7)+"/"+this.dataFimSelected.substring(0,4)), 
+          // (this.dataInicioSelected === undefined ? "" : this.dataInicioSelected.substring(8,10)+"/"+this.dataInicioSelected.substring(5,7)+"/"+this.dataInicioSelected.substring(0,4)), 
+          // (this.dataFimSelected === undefined ? "" : this.dataFimSelected.substring(8,10)+"/"+this.dataFimSelected.substring(5,7)+"/"+this.dataFimSelected.substring(0,4)), 
+          (this.dataInicioSelected === undefined ? "" : this.dataInicioSelected), 
+          (this.dataFimSelected === undefined ? "" : this.dataFimSelected), 
           (this.estadoSelectedUF === undefined || this.estadoSelectedUF == "Estado - Todos" ? "" : this.estadoSelectedUF), 
           (this.cidadeSelectedNome === undefined || this.cidadeSelectedNome == "Cidade - Todas" ? "" : Funcoes.replaceAccents(this.cidadeSelectedNome)), 
           (this.situacaoSelected === undefined || this.situacaoSelected == "1" ? "" : this.situacaoSelected), 
