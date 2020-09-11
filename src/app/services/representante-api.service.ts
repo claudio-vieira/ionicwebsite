@@ -30,8 +30,8 @@ export class RepresentanteApiService {
     return res;
   }
 
-  recuperarVendedorPorNomeCodigo(nome: string): Observable<any> {
-    const url = environment.apiURL + 'recuperarVendedorPorNomeCodigo';
+  recuperarVendedorPorCodigoNomeComUFsQueAtende(nome: string): Observable<any> {
+    const url = environment.apiURL + 'recuperarVendedorPorCodigoNomeComUFsQueAtende';
     const data = {nome};
 
     //console.log(data);

@@ -130,7 +130,7 @@ export class HistoricoPedidoPage implements OnInit {
       });
   }
 
-  async getEstados(uf: string){
+  async getEstados(ufs: string){
     
     const loading = await this.loadingController.create({
       message: 'Aguarde...',
@@ -141,13 +141,14 @@ export class HistoricoPedidoPage implements OnInit {
     this.apiLocalidades.getEstados()
       .subscribe(res => {
         for (const item of res) {
-          if(uf != ""){
-            if(uf === item.sigla) this.estados.push({id:item.id, sigla: item.sigla});
+          if(ufs != ""){
+            if(ufs.includes(item.sigla)) this.estados.push({id:item.id, sigla: item.sigla});
           }else{
             this.estados.push({id:item.id, sigla: item.sigla});
           }
         }
 
+        //Ordena os estados pela sigla
         this.estados = this.estados.sort(function (a, b) {
           if (a.sigla > b.sigla) {
             return 1;
@@ -318,10 +319,10 @@ export class HistoricoPedidoPage implements OnInit {
     this.cidades.push({nome:'Cidade - Todas', id: "0"});
     this.cidadeSelected = 'Cidade - Todas';
 
-    this.apiRepresentante.recuperarVendedorPorNomeCodigo(representanteSelected).subscribe(res => {
+    this.apiRepresentante.recuperarVendedorPorCodigoNomeComUFsQueAtende(representanteSelected).subscribe(res => {
       console.log('enrtrei no subscribe do post');
       if(res != null && res.data_sellers != null && res.data_sellers[0] != null){
-        this.getEstados(res.data_sellers[0].uf);
+        this.getEstados(res.data_sellers[0].ufs);
       }else{
         this.getEstados("");
       }

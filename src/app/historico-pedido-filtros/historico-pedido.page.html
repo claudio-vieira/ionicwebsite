@@ -134,7 +134,8 @@
         </div>
         <div>
           <ion-label class="titulo">N pedido: </ion-label>
-          <ion-label>{{pedido.cdpedido}} </ion-label>
+          <ion-label *ngIf="pedido.cdvenda == 'V'">{{pedido.cdpedido}} - VENDA</ion-label>
+          <ion-label *ngIf="pedido.cdvenda == 'B'">{{pedido.cdpedido}} - BONIFICACAO</ion-label>
           &nbsp;
           <ion-label class="titulo">Data: </ion-label>
           <ion-label>{{pedido.dtpedido | date: 'dd/MM/yyyy' }} {{pedido.hrpedido}}</ion-label>
@@ -175,8 +176,24 @@
 
 
         <div>
-          <ion-label class="titulo">Peso Liquido | Peso Bruto | Volume | Produtos: </ion-label>
-          <ion-label>{{pedido.pesoliquidototal| currency:'&nbsp;'}} | {{pedido.pesobrutototal| currency:'&nbsp;'}} | {{pedido.totalvolume}} | {{pedido.totalprodutos}}</ion-label>
+          <table>
+            <tbody>
+              <tr>
+                <th>Peso Liquido&nbsp;&nbsp;</th>
+                <th>Peso Bruto&nbsp;&nbsp;</th>
+                <th>Volume&nbsp;&nbsp;</th>
+                <th>Produtos&nbsp;&nbsp;</th>
+              </tr>
+              <tr>
+                <td>{{pedido.pesoliquidototal| currency:'&nbsp;'}}</td>
+                <td>{{pedido.pesobrutototal| currency:'&nbsp;'}}</td>
+                <td>{{pedido.totalprodutos}}</td>
+                <td>{{pedido.totalvolume}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- <ion-label class="titulo">Peso Liquido | Peso Bruto | Volume | Produtos: </ion-label>
+          <ion-label>{{pedido.pesoliquidototal| currency:'&nbsp;'}} | {{pedido.pesobrutototal| currency:'&nbsp;'}} | {{pedido.totalprodutos}} | {{pedido.totalvolume}}</ion-label> -->
         </div>
 
 

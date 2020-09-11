@@ -13,62 +13,129 @@
   <!-- DADOS DOS ITENS DO PEDIDO -->
   <ion-list>
     <ion-card *ngFor="let itens of pedido.itensDoPedido" color="light">
-      <ion-card-content class={{itens.class}} > 
-        <!-- <ion-label class="tituloItem">Produto: </ion-label> -->
-        <ion-label class="valorpadding">{{ itens.cdproduto }} - {{ itens.produtoDescricao }}</ion-label>
+      <ion-card-content class={{itens.class}} >
         <div>
-          <ion-label class="tituloItem">Qtde: </ion-label>
-          <ion-label>{{itens.qtdeproduto }} {{itens.produtoUnidade}}</ion-label>
+          <ion-label class="valorpadding">{{ itens.cdproduto }} - {{ itens.produtoDescricao }}</ion-label>
+        </div> 
+        <div class="content_valores_itens">
+          <div>
+            <ion-label class="tituloItem">Qtde: </ion-label>
+          </div>
+          <div>
+            <ion-label class="tituloItem">R$ Tabela:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ion-label>
+          </div>
+          <div>
+            <ion-label class="tituloItem">R$ Mínimo:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ion-label>
+          </div>
+          <div>
+            <ion-label class="tituloItem">R$ Desc/Acres:</ion-label>
+          </div>
+          <div>
+            <ion-label class="tituloItem">R$ Venda:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ion-label>
+          </div>
+          <div>
+            <ion-label class="tituloItem">R$ Gordura R:&nbsp;&nbsp;&nbsp;</ion-label>
+          </div>
+          <div>
+            <ion-label class="tituloItemVerm">R$ Gordura S:&nbsp;&nbsp;&nbsp;</ion-label>
+          </div>  
         </div>
-        <div>
-          <ion-label class="tituloItem">R$ Tabela:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ion-label>
-          <ion-label>{{itens.valorTabelaMinimo * itens.qtdeproduto | currency:'&nbsp;' }}</ion-label>
-          <ion-label> | {{itens.valorTabelaMinimo | currency:'&nbsp;' }}</ion-label>
-          <ion-label> | {{itens.valorTabelaMinimo / itens.produtoQtdembalagem | currency:'&nbsp;' }}</ion-label>
+        <div class="content_valores_itens">
+          <table>
+            <tbody>
+              <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+              <tr>
+                <th>
+                  <ion-label>{{itens.qtdeproduto }} {{itens.produtoUnidade}}</ion-label>
+                </th>
+                <th></th>
+                <th></th>
+              </tr>
+              <tr>
+                <th><ion-label>{{itens.valorTabelaMinimo * itens.qtdeproduto | currency:'&nbsp;'}}</ion-label></th>
+                <th><ion-label>{{itens.valorTabelaMinimo | currency:'&nbsp;' }}</ion-label></th>
+                <th><ion-label>{{itens.valorTabelaMinimo / itens.produtoQtdembalagem | currency:'&nbsp;' }}</ion-label></th>
+              </tr>
+              <tr>
+                <th><ion-label>{{itens.valorSelecionadoPedido * itens.qtdeproduto | currency:'&nbsp;' }}</ion-label></th>
+                <th><ion-label>{{itens.valorSelecionadoPedido | currency:'&nbsp;' }}</ion-label></th>
+                <th><ion-label>{{itens.valorSelecionadoPedido / itens.produtoQtdembalagem | currency:'&nbsp;' }}</ion-label></th>
+              </tr>
+              <tr>
+                <th *ngIf="itens.valorTabelaMinimo != itens.precovenda">
+                  <ion-label *ngIf="itens.valorTabelaMinimo < itens.precovenda">{{(itens.precovenda - itens.valorTabelaMinimo) * itens.qtdeproduto | currency:'&nbsp;' }}</ion-label>
+                  <ion-label *ngIf="itens.valorTabelaMinimo > itens.precovenda">{{(itens.valorTabelaMinimo - itens.precovenda) * itens.qtdeproduto | currency:'&nbsp;' }}</ion-label>
+                </th>
+                <th *ngIf="itens.valorTabelaMinimo != itens.precovenda">
+                  <ion-label *ngIf="itens.valorTabelaMinimo < itens.precovenda">{{(itens.precovenda - itens.valorTabelaMinimo) | currency:'&nbsp;' }}</ion-label>
+                  <ion-label *ngIf="itens.valorTabelaMinimo > itens.precovenda">{{(itens.valorTabelaMinimo - itens.precovenda) | currency:'&nbsp;' }}</ion-label>
+                </th>
+                <th *ngIf="itens.valorTabelaMinimo != itens.precovenda">
+                  <ion-label *ngIf="itens.valorTabelaMinimo < itens.precovenda">{{(itens.precovenda - itens.valorTabelaMinimo) / itens.produtoQtdembalagem | currency:'&nbsp;' }} (+)</ion-label>
+                  <ion-label *ngIf="itens.valorTabelaMinimo > itens.precovenda">{{(itens.valorTabelaMinimo - itens.precovenda) / itens.produtoQtdembalagem | currency:'&nbsp;' }} (-)</ion-label>
+                </th>
+                <th *ngIf="itens.valorTabelaMinimo == itens.precovenda">
+                  <ion-label *ngIf="itens.valorTabelaMinimo == itens.precovenda">0,00</ion-label>
+                </th>
+                <th *ngIf="itens.valorTabelaMinimo == itens.precovenda">
+                  <ion-label *ngIf="itens.valorTabelaMinimo == itens.precovenda">0,00</ion-label>
+                </th>
+                <th *ngIf="itens.valorTabelaMinimo == itens.precovenda">
+                  <ion-label *ngIf="itens.valorTabelaMinimo == itens.precovenda">0,00</ion-label>
+                </th>
+              </tr>
+              <tr>
+                <th>
+                  <ion-label>{{itens.precovenda * itens.qtdeproduto | currency:'&nbsp;' }}</ion-label>
+                </th>
+                <th>
+                  <ion-label>{{itens.precovenda | currency:'&nbsp;' }}</ion-label>
+                </th>
+                <th>
+                  <ion-label>{{itens.precovenda / itens.produtoQtdembalagem | currency:'&nbsp;' }}</ion-label>
+                </th>
+              </tr>
+              <tr>
+                <th *ngIf="itens.usogordura != 0 || itens.sobragordura != 0">
+                  <ion-label *ngIf="itens.usogordura > 0">{{itens.usogordura | currency:'&nbsp;' }}</ion-label>
+                  <ion-label *ngIf="itens.sobragordura > 0">{{itens.sobragordura| currency:'&nbsp;' }}</ion-label>
+                </th>
+                <th *ngIf="itens.usogordura != 0 || itens.sobragordura != 0">
+                  <ion-label *ngIf="itens.usogordura > 0">{{itens.usogordura / itens.qtdeproduto | currency:'&nbsp;' }}</ion-label>
+                  <ion-label *ngIf="itens.sobragordura > 0">{{itens.sobragordura / itens.qtdeproduto | currency:'&nbsp;' }}</ion-label>
+                </th>
+                <th *ngIf="itens.usogordura != 0 || itens.sobragordura != 0">
+                  <ion-label *ngIf="itens.usogordura > 0">{{(itens.usogordura / itens.qtdeproduto ) / itens.produtoQtdembalagem | currency:'&nbsp;' }} (-)</ion-label>
+                  <ion-label *ngIf="itens.sobragordura > 0">{{(itens.sobragordura / itens.qtdeproduto ) / itens.produtoQtdembalagem | currency:'&nbsp;' }} (+)</ion-label>
+                </th>
+                <th *ngIf="itens.usogordura == 0 && itens.sobragordura == 0">
+                  <ion-label *ngIf="itens.usogordura == 0 && itens.sobragordura == 0">0,00</ion-label>
+                </th>
+                <th *ngIf="itens.usogordura == 0 && itens.sobragordura == 0">
+                  <ion-label *ngIf="itens.usogordura == 0 && itens.sobragordura == 0">0,00</ion-label>
+                </th>
+                <th *ngIf="itens.usogordura == 0 && itens.sobragordura == 0">
+                  <ion-label *ngIf="itens.usogordura == 0 && itens.sobragordura == 0">0,00</ion-label>
+                </th>
+              </tr>
+              <tr>
+                <th>
+                  <ion-label class="ItemVerm">{{itens.valornegativogordura | currency:'&nbsp;'}}</ion-label>
+                </th>
+                <th>
+                  <ion-label class="ItemVerm">{{itens.valornegativogordura / itens.qtdeproduto | currency:'&nbsp;'}}</ion-label>
+                </th>
+                <th>
+                  <ion-label class="ItemVerm">{{(itens.valornegativogordura / itens.qtdeproduto) / itens.produtoQtdembalagem | currency:'&nbsp;'}}</ion-label>
+                </th>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div>
-          <ion-label class="tituloItem">R$ Mínimo:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ion-label>
-          <ion-label>{{itens.valorSelecionadoPedido * itens.qtdeproduto | currency:'&nbsp;' }}</ion-label>
-          <ion-label> | {{itens.valorSelecionadoPedido | currency:'&nbsp;' }}</ion-label>
-          <ion-label> | {{itens.valorSelecionadoPedido / itens.produtoQtdembalagem | currency:'&nbsp;' }}</ion-label>
-        </div>
-        <div>
-          <ion-label class="tituloItem">R$ Desc/Acres:</ion-label>
-          <ion-label *ngIf="itens.valorTabelaMinimo < itens.precovenda"> {{(itens.precovenda - itens.valorTabelaMinimo) * itens.qtdeproduto | currency:'&nbsp;' }}</ion-label>
-          <ion-label *ngIf="itens.valorTabelaMinimo > itens.precovenda"> {{(itens.valorTabelaMinimo - itens.precovenda) * itens.qtdeproduto | currency:'&nbsp;' }}</ion-label>
-          
-          <ion-label *ngIf="itens.valorTabelaMinimo < itens.precovenda"> | {{(itens.precovenda - itens.valorTabelaMinimo) | currency:'&nbsp;' }}</ion-label>
-          <ion-label *ngIf="itens.valorTabelaMinimo > itens.precovenda"> | {{(itens.valorTabelaMinimo - itens.precovenda) | currency:'&nbsp;' }}</ion-label>
-          
-          <ion-label *ngIf="itens.valorTabelaMinimo < itens.precovenda"> | {{(itens.precovenda - itens.valorTabelaMinimo) / itens.produtoQtdembalagem | currency:'&nbsp;' }} (+)</ion-label>
-          <ion-label *ngIf="itens.valorTabelaMinimo > itens.precovenda"> | {{(itens.valorTabelaMinimo - itens.precovenda) / itens.produtoQtdembalagem | currency:'&nbsp;' }} (-)</ion-label>
-        
-          <ion-label *ngIf="itens.valorTabelaMinimo == itens.precovenda">&nbsp; 0,00 |&nbsp;&nbsp;0,00 |&nbsp;&nbsp;0,00</ion-label>
-        </div>
-        <div>
-          <ion-label class="tituloItem">R$ Venda:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ion-label>
-          <ion-label>{{itens.precovenda * itens.qtdeproduto | currency:'&nbsp;' }}</ion-label>
-          <ion-label> | {{itens.precovenda | currency:'&nbsp;' }}</ion-label>
-          <ion-label> | {{itens.precovenda / itens.produtoQtdembalagem | currency:'&nbsp;' }}</ion-label>
-        </div>
-        <div>
-          <ion-label class="tituloItem">R$ Gordura R:&nbsp;&nbsp;&nbsp;</ion-label>
-          <ion-label *ngIf="itens.usogordura > 0">{{itens.usogordura | currency:'&nbsp;' }}</ion-label>
-          <ion-label *ngIf="itens.sobragordura > 0">{{itens.sobragordura| currency:'&nbsp;' }}</ion-label>
-          <ion-label *ngIf="itens.usogordura > 0"> | {{itens.usogordura / itens.qtdeproduto | currency:'&nbsp;' }}</ion-label>
-          <ion-label *ngIf="itens.sobragordura > 0"> | {{itens.sobragordura / itens.qtdeproduto | currency:'&nbsp;' }}</ion-label>
-          <ion-label *ngIf="itens.usogordura > 0"> | {{(itens.usogordura / itens.qtdeproduto ) / itens.produtoQtdembalagem | currency:'&nbsp;' }} (-)</ion-label>
-          <ion-label *ngIf="itens.sobragordura > 0"> | {{(itens.sobragordura / itens.qtdeproduto ) / itens.produtoQtdembalagem | currency:'&nbsp;' }} (+)</ion-label>
-          <ion-label *ngIf="itens.usogordura == 0 && itens.sobragordura == 0"> &nbsp;0,00 |&nbsp;&nbsp;0,00 |&nbsp;&nbsp;0,00</ion-label>
-        </div>
-        <div>
-          <ion-label class="tituloItemVerm">R$ Gordura S:&nbsp;&nbsp;&nbsp;</ion-label>
-          <ion-label class="ItemVerm">{{itens.valornegativogordura | currency:'&nbsp;' }}</ion-label>
-          <ion-label class="ItemVerm"> | {{itens.valornegativogordura / itens.qtdeproduto | currency:'&nbsp;' }}</ion-label>
-          <ion-label class="ItemVerm"> | {{(itens.valornegativogordura / itens.qtdeproduto) / itens.produtoQtdembalagem | currency:'&nbsp;' }}</ion-label>
-        </div>  
-        
-        
       </ion-card-content>
     </ion-card>
     <!-- DADOS DOS ITENS DO PEDIDO -->
