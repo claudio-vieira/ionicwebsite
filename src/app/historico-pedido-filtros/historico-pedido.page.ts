@@ -92,8 +92,8 @@ export class HistoricoPedidoPage implements OnInit {
     this.situacoes.push('ASEREMENVIADOS');
     this.situacoes.push('CANCELADO');*/
 
-    this.dataFimSelected = new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[1]+"/"+
-              new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[2]+"/"+
+    this.dataFimSelected = new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[2]+"/"+
+              new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[1]+"/"+
               new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[0];
 
     this.dataInicioSelected = "01/"+new Date().toJSON().slice(0,10).replace(/-/g,'/').split("/",3)[1]
