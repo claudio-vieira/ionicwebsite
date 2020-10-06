@@ -34,8 +34,8 @@ export class SupervisoresApiService {
     var dateObj = new Date();
     var month = dateObj.getUTCMonth() + 1; //months from 1-12
     var year = dateObj.getUTCFullYear();
-    var anomes = year+""+(month.toString.length == 1 ? "0"+month : month);
-
+    var anomes = year+""+(month <= 9 ? "0"+month : month);
+    
     const url = environment.apiURL + 'recuperarSupervisorPorCodigoGorduraAnoMes';
     const data = {codigo, anomes};
 
