@@ -395,7 +395,7 @@ async liberarPedido(pedido: any) {
     var dateObj = new Date();
     var month = dateObj.getUTCMonth() + 1; //months from 1-12
     var year = dateObj.getUTCFullYear();
-    var anomes = year+""+(month.toString.length == 1 ? "0"+month : month);
+    var anomes = year+""+(month <= 9 ? "0"+month : month);
 
     this.api.liberarPedido(pedido.vendedorCodigo, pedido.cdpedido, pedido.cdcliente, pedido.valalorPendenteGordura, anomes).subscribe(res => {
 
