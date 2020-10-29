@@ -108,12 +108,13 @@ export class PedidosApiService {
       catchError(this.handleError));
   }
 
-  getUltimoPedido(cdvendedor: string, cdsupervisor: string, cdcliente: string): Observable<any> {
+  getUltimoPedido(cdvendedor: string, cdsupervisor: string, cdcliente: string, cdpedido: string): Observable<any> {
     const url = environment.apiURL + 'recuperarUltimoPedidoPorCodigoCliente';
     const data = {
         cdvendedor,
         cdsupervisor,
-        cdcliente
+        cdcliente,
+        cdpedido
     };
 
     const httpOptionsLogin = {
